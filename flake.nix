@@ -23,6 +23,9 @@
     {
       packages = forAllSystems (system: {
         default = pkgsForEach.${system}.callPackage ./nix/pkgs/default.nix { };
+      });
+
+      lib = forAllSystems (system: {
         wrapTextfoxy = pkgsForEach.${system}.callPackage ./nix/pkgs/wrapTextfoxy.nix { };
       });
 

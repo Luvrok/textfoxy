@@ -54,11 +54,17 @@ let
         cat "$extraUserContentPath" >> "$out/userContent.css"
       '';
 
-  configScript = ''
+  configScript = builtins.replaceStrings
+  [ "@textfoxyChrome@" ]
+  [ "${textfoxyChrome}" ]
+  ''
     // TEXTFOXY GENERATED CONFIG
     const { classes: Cc, interfaces: Ci } = Components;
     const { FileUtils } = ChromeUtils.importESModule(
       "resource://gre/modules/FileUtils.sys.mjs"
+    );
+    const { Services } = ChromeUtils.importESModule(
+      "resource://gre/modules/Services.sys.mjs"
     );
 
     var updated = false;
@@ -80,6 +86,7 @@ let
       updated = true;
     } else if (!hashFile.exists()) {
       chromeDir.remove(true);
+      chromeDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
       userChrome.copyTo(chromeDir, "userChrome.css");
       userContent.copyTo(chromeDir, "userContent.css");
       updated = true;

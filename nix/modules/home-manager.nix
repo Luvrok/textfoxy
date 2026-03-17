@@ -41,7 +41,7 @@ let
     cfg.profiles);
 
   wrappedBrowser =
-    inputs.self.packages.${system}.wrapTextfoxy
+    inputs.self.lib.${system}.wrapTextfoxy
       (if cfg.browser == "librewolf" then pkgs.librewolf-unwrapped else pkgs.firefox-unwrapped)
       { inherit (cfg) configCss; };
 in
