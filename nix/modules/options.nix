@@ -28,12 +28,24 @@ in
   ];
 
   options.textfoxy = {
-    enable = mkEnableOption "Textfoxy.";
+    enable = lib.mkEnableOption "textfoxy";
 
-    browser = mkOption {
-      type = enum [ "firefox" "librewolf" ];
-      default = "firefox";
-      description = "Browser to configure.";
+    browsers = {
+      firefox = {
+        enable = lib.mkEnableOption "Firefox support";
+        profiles = lib.mkOption {
+          type = with lib.types; listOf str;
+          default = [ ];
+        };
+      };
+
+      librewolf = {
+        enable = lib.mkEnableOption "LibreWolf support";
+        profiles = lib.mkOption {
+          type = with lib.types; listOf str;
+          default = [ ];
+        };
+      };
     };
 
     config = {

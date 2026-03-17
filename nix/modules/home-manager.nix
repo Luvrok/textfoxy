@@ -1,10 +1,5 @@
 inputs:
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ config, lib, pkgs, ... }:
 let
   inherit (pkgs.stdenv.hostPlatform) system;
   inherit (builtins) baseNameOf;
@@ -15,7 +10,7 @@ let
     inputs.firefox-addons.packages.${system}.sidebery
   ];
 
-  mkProfiles = lib.mkMerge (map
+  mkProfiles = browserProfiles: lib.mkMerge (map
     (profile: {
       ${profile} = {
         extraConfig = builtins.readFile "${textfoxyAssets}/user.js";
@@ -24,9 +19,9 @@ let
         userChrome = lib.mkBefore (builtins.readFile "${textfoxyAssets}/chrome/userChrome.css");
       };
     })
-    cfg.profiles);
+    browserProfiles);
 
-  mkChromeFiles = profileBase: lib.mkMerge (map
+  mkChromeFiles = profileBase: profiles: lib.mkMerge (map
     (profile: {
       "${profileBase}/${profile}/chrome" = {
         source = pkgs.lib.cleanSourceWith {
@@ -38,45 +33,20 @@ let
 
       "${profileBase}/${profile}/chrome/config.css".text = cfg.configCss;
     })
-    cfg.profiles);
+    profiles);
 in
 {
-  imports = [
-    ./options.nix
-    (lib.mkChangedOptionModule [ "textfoxy" "profile" ] [ "textfoxy" "profiles" ] (
-      config:
-      let
-        profile = lib.getAttrFromPath [ "textfoxy" "profile" ] config;
-      in
-      [ profile ]
-    ))
-  ];
-
-  options.textfoxy = {
-    profiles = lib.mkOption {
-      type = with lib.types; listOf str;
-      default = [ ];
-      description = "List of browser profiles to apply the textfoxy configuration to";
-    };
-  };
+  imports = [ ./options.nix ];
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
-    (lib.mkIf (cfg.browser == "firefox") {
-      programs.firefox = {
-        enable = true;
-        profiles = mkProfiles;
-      };
-
-      home.file = mkChromeFiles ".mozilla/firefox";
+    (lib.mkIf cfg.browsers.firefox.enable {
+      programs.firefox.profiles = mkProfiles cfg.browsers.firefox.profiles;
+      home.file = mkChromeFiles ".mozilla/firefox" cfg.browsers.firefox.profiles;
     })
 
-    (lib.mkIf (cfg.browser == "librewolf") {
-      programs.librewolf = {
-        enable = true;
-        profiles = mkProfiles;
-      };
-
-      home.file = mkChromeFiles ".librewolf";
+    (lib.mkIf cfg.browsers.librewolf.enable {
+      programs.librewolf.profiles = mkProfiles cfg.browsers.librewolf.profiles;
+      home.file = mkChromeFiles ".librewolf" cfg.browsers.librewolf.profiles;
     })
   ]);
 }
