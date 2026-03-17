@@ -7,32 +7,38 @@ let
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.modules) mkRenamedOptionModule;
   inherit (lib.strings) replaceStrings;
-  inherit (lib.types) bool str;
+  inherit (lib.types) bool str enum;
 
-  cfg = config.textfox.config;
+  cfg = config.textfoxy.config;
 in
 {
   imports = [
     (mkRenamedOptionModule
-      [ "textfox" "config" "displayHorizontalTabs" ]
-      [ "textfox" "config" "tabs" "horizontal" "enable" ]
+      [ "textfoxy" "config" "displayHorizontalTabs" ]
+      [ "textfoxy" "config" "tabs" "horizontal" "enable" ]
     )
     (mkRenamedOptionModule
-      [ "textfox" "config" "sidebery" "margin" ]
-      [ "textfox" "config" "tabs" "vertical" "margin" ]
+      [ "textfoxy" "config" "sidebery" "margin" ]
+      [ "textfoxy" "config" "tabs" "vertical" "margin" ]
     )
     (mkRenamedOptionModule
-      [ "textfox" "config" "tabs" "vertical" "margin" ]
-      [ "textfox" "config" "tabs" "vertical" "sidebery" "margin" ]
+      [ "textfoxy" "config" "tabs" "vertical" "margin" ]
+      [ "textfoxy" "config" "tabs" "vertical" "sidebery" "margin" ]
     )
   ];
 
-  options.textfox = {
-    enable = mkEnableOption "Textfox.";
+  options.textfoxy = {
+    enable = mkEnableOption "Textfoxy.";
+
+    browser = mkOption {
+      type = enum [ "firefox" "librewolf" ];
+      default = "firefox";
+      description = "Browser to configure.";
+    };
 
     config = {
       displayWindowControls = mkEnableOption "window controls.";
-      displayNavButtons = mkEnableOption "back and forward navigation buttons in the Firefox UI.";
+      displayNavButtons = mkEnableOption "back and forward navigation buttons in the browser UI.";
       displayUrlbarIcons = mkEnableOption "icons inside url bar.";
       displaySidebarTools = mkEnableOption "sidebar tools section." // {
         default = true;
@@ -171,7 +177,7 @@ in
           --tf-border-transition: ${cfg.border.transition};
           --tf-border-width: ${cfg.border.width};
           --tf-rounding: ${cfg.border.radius};
-          --tf-margin: ${cfg.tabs.vertical.margin};
+          --tf-margin: ${cfg.tabs.vertical.sidebery.margin};
           --tf-text-transform: ${cfg.textTransform};
           --tf-display-horizontal-tabs: ${if cfg.tabs.horizontal.enable then "block" else "none"};
           --tf-display-window-controls: ${if cfg.displayWindowControls then "flex" else "none"};

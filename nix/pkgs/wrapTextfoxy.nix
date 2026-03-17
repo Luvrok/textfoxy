@@ -12,8 +12,8 @@ browser:
 }@args:
 let
 
-  textfoxChrome =
-    runCommandLocal "textfox-chrome"
+  textfoxyChrome =
+    runCommandLocal "textfoxy-chrome"
       {
         inherit configCss extraUserChrome extraUserContent;
         passAsFile = [
@@ -55,7 +55,7 @@ let
       '';
 
   configScript = ''
-    /* TEXTFOX GENERATED CONFIG */
+    /* TEXTFOXY GENERATED CONFIG */
 
     const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
     Cu.import("resource://gre/modules/FileUtils.jsm");
@@ -68,12 +68,12 @@ let
     // XP_UNIX forces symlinks to be resolved when copying
     // so we are just going to normal copy from nix store
     // <https://bugzilla.mozilla.org/show_bug.cgi?id=480726>
-    var textfoxChrome = new FileUtils.File("${textfoxChrome}");
-    var userChrome = new FileUtils.File("${textfoxChrome}/userChrome.css");
-    var userContent = new FileUtils.File("${textfoxChrome}/userContent.css");
+    var textfoxyChrome = new FileUtils.File("${textfoxyChrome}");
+    var userChrome = new FileUtils.File("${textfoxyChrome}/userChrome.css");
+    var userContent = new FileUtils.File("${textfoxyChrome}/userContent.css");
 
     var hashFile = chromeDir.clone();
-    hashFile.append(textfoxChrome.displayName);
+    hashFile.append(textfoxyChrome.displayName);
 
     if (!chromeDir.exists()) {
         chromeDir.create(Ci.nsIFile.DIRECTORY_TYPE, FileUtils.PERMS_DIRECTORY);
@@ -88,7 +88,7 @@ let
         updated = true;
     }
 
-    // Restart Firefox immediately if one of the files got updated
+    // Restart browser immediately if one of the files got updated
     if (updated === true) {
         // Write into storage the iteration of the config via nix hash
         hashFile.create(Ci.nsIFile.NORMAL_FILE_TYPE, 0b100100100);
@@ -97,12 +97,12 @@ let
         appStartup.quit(Ci.nsIAppStartup.eForceQuit | Ci.nsIAppStartup.eRestart);
     }
 
-    // Needed prefs to use textfox
+    // Needed prefs to use textfoxy
     pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
     pref("svg.context-properties.content.enabled", true);
     pref("layout.css.has-selector.enabled", true);
 
-    /* END TEXTFOX AUTOCONFIG */
+    /* END TEXTFOXY AUTOCONFIG */
   '';
 
 in
@@ -113,7 +113,7 @@ wrapFirefox browser (
     "extraUserContent"
   ]
   // {
-    pname = args.pname or "textfox";
+    pname = args.pname or "textfoxy";
     extraPrefs = configScript + (args.extraPrefs or "");
   }
 )

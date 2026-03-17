@@ -1,5 +1,5 @@
 {
-  description = "Firefox theme for the tui enthusiast";
+  description = "firefox theme for the tui enthusiast (with librewolf support)";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
@@ -23,13 +23,13 @@
     {
       packages = forAllSystems (system: {
         default = pkgsForEach.${system}.callPackage ./nix/pkgs/default.nix { };
-        wrapTextfox = pkgsForEach.${system}.callPackage ./nix/pkgs/wrapTextfox.nix { };
+        wrapTextfoxy = pkgsForEach.${system}.callPackage ./nix/pkgs/wrapTextfoxy.nix { };
       });
 
-      nixosModules.default = self.nixosModules.textfox; # convention
-      nixosModules.textfox = import ./nix/modules/nixos.nix inputs;
+      nixosModules.default = self.nixosModules.textfoxy; # convention
+      nixosModules.textfoxy = import ./nix/modules/nixos.nix inputs;
 
-      homeManagerModules.default = self.homeManagerModules.textfox;
-      homeManagerModules.textfox = import ./nix/modules/home-manager.nix inputs;
+      homeManagerModules.default = self.homeManagerModules.textfoxy;
+      homeManagerModules.textfoxy = import ./nix/modules/home-manager.nix inputs;
     };
 }

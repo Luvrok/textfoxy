@@ -6,22 +6,28 @@ inputs:
   ...
 }:
 let
-  inherit (lib.options) mkOption mkPackageOption;
+  inherit (lib.options) mkOption mkPackageOption types;
   inherit (lib.modules) mkIf;
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib.types) listOf path str;
   inherit (lib.trivial) boolToString;
 
   inherit (pkgs.stdenv.hostPlatform) system;
-  wrapTextfox = inputs.self.packages.${system}.wrapTextfox;
+  wrapTextfoxy = inputs.self.packages.${system}.wrapTextfoxy;
 
-  cfg = config.textfox;
+  cfg = config.textfoxy;
+
+  selectedPackage =
+    if cfg.browser == "librewolf"
+    then cfg.librewolf.package
+    else cfg.firefox.package;
 in
 {
   imports = [ ./options.nix ];
 
-  options.textfox = {
-    package = mkPackageOption pkgs "firefox-unwrapped" { };
+  options.textfoxy = {
+    firefox.package = mkPackageOption pkgs "firefox-unwrapped" { };
+    librewolf.package = mkPackageOption pkgs "librewolf-unwrapped" { };
 
     extraPoliciesFiles = mkOption {
       type = listOf path;
@@ -38,13 +44,13 @@ in
     extraUserChrome = mkOption {
       type = str;
       default = "";
-      description = "Custom userChrome.css appended to the hooked textfox file.";
+      description = "Custom userChrome.css appended to the hooked textfoxy file.";
     };
 
     extraUserContent = mkOption {
       type = str;
       default = "";
-      description = "Custom userContent.css appended to the hooked textfox file.";
+      description = "Custom userContent.css appended to the hooked textfoxy file.";
     };
   };
 
@@ -66,7 +72,7 @@ in
 
         preferences =
           let
-            icons = config.textfox.config.icons;
+            icons = config.textfoxy.config.icons;
           in
           ''
             pref("shyfox.enable.ext.mono.toolbar.icons", ${boolToString icons.toolbar.extensions.enable});
@@ -76,7 +82,7 @@ in
 
       in
       [
-        (wrapTextfox cfg.package {
+        (wrapTextfoxy selectedPackage {
           inherit (cfg)
             extraPoliciesFiles
             extraPrefsFiles

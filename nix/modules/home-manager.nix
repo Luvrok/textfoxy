@@ -7,68 +7,85 @@ inputs:
 }:
 let
   inherit (pkgs.stdenv.hostPlatform) system;
-  package = inputs.self.packages.${system}.default;
-  configDir =
-    if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application\ Support/Firefox/Profiles/"
-    else
-      ".mozilla/firefox/";
+  inherit (builtins) baseNameOf;
+  cfg = config.textfoxy;
+  textfoxyAssets = inputs.self.packages.${system}.default;
+
   extensionList = lib.optionals cfg.config.tabs.vertical.sidebery.enable [
     inputs.firefox-addons.packages.${system}.sidebery
   ];
 
-  cfg = config.textfox;
+  mkProfiles = lib.mkMerge (map
+    (profile: {
+      ${profile} = {
+        extraConfig = builtins.readFile "${textfoxyAssets}/user.js";
+        extensions.packages = extensionList;
+        containersForce = true;
+        userChrome = lib.mkBefore (builtins.readFile "${textfoxyAssets}/chrome/userChrome.css");
+      };
+    })
+    cfg.profiles);
+
+  mkChromeFiles = profileBase: lib.mkMerge (map
+    (profile: {
+      "${profileBase}/${profile}/chrome" = {
+        source = pkgs.lib.cleanSourceWith {
+          src = "${textfoxyAssets}/chrome";
+          filter = path: type: !(type == "regular" && baseNameOf path == "userChrome.css");
+        };
+        recursive = true;
+      };
+
+      "${profileBase}/${profile}/chrome/config.css".text = cfg.configCss;
+    })
+    cfg.profiles);
+
+  wrappedBrowser =
+    inputs.self.packages.${system}.wrapTextfoxy
+      (if cfg.browser == "librewolf" then pkgs.librewolf-unwrapped else pkgs.firefox-unwrapped)
+      { inherit (cfg) configCss; };
 in
 {
 
   imports = [
     ./options.nix
-    (lib.mkChangedOptionModule [ "textfox" "profile" ] [ "textfox" "profiles" ] (
+    (lib.mkChangedOptionModule [ "textfoxy" "profile" ] [ "textfoxy" "profiles" ] (
       config:
       let
-        profile = lib.getAttrFromPath [ "textfox" "profile" ] config;
+        profile = lib.getAttrFromPath [ "textfoxy" "profile" ] config;
 
       in
       [ profile ]
     ))
   ];
 
-  options.textfox = {
+  options.textfoxy = {
     profiles = lib.mkOption {
       type = with lib.types; listOf str;
       default = [ ];
-      description = "List of Firefox profiles to apply the textfox configuration to";
+      description = "List of browser profiles to apply the textfoxy configuration to";
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    programs.firefox = {
-      enable = true;
-      profiles = lib.mkMerge (
-        map (profile: {
-          "${profile}" = {
-            extraConfig = builtins.readFile "${package}/user.js";
-            extensions.packages = extensionList;
-            containersForce = true;
-            userChrome = lib.mkBefore (builtins.readFile "${package}/chrome/userChrome.css");
-          };
-        }) cfg.profiles
-      );
-    };
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    (lib.mkIf (cfg.browser == "firefox") {
+      programs.firefox = {
+        enable = true;
+        package = wrappedBrowser;
+        profiles = mkProfiles;
+      };
 
-    home.file = lib.mkMerge (
-      map (profile: {
-        "${configDir}${profile}/chrome" = {
-          source = pkgs.lib.cleanSourceWith {
-            src = "${package}/chrome";
-            filter = path: type: !(type == "regular" && baseNameOf path == "userChrome.css");
-          };
-          recursive = true;
-        };
-        "${configDir}${profile}/chrome/config.css" = {
-          text = cfg.configCss;
-        };
-      }) cfg.profiles
-    );
-  };
+      home.file = mkChromeFiles ".mozilla/firefox";
+    })
+
+    (lib.mkIf (cfg.browser == "librewolf") {
+      programs.librewolf = {
+        enable = true;
+        package = wrappedBrowser;
+        profiles = mkProfiles;
+      };
+
+      home.file = mkChromeFiles ".librewolf";
+    })
+  ]);
 }
