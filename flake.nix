@@ -18,19 +18,10 @@
         "x86_64-darwin"
         "aarch64-darwin"
       ];
-      pkgsForEach = nixpkgs.legacyPackages;
-    in
-    {
+    in {
       packages = forAllSystems (system: {
-        default = pkgsForEach.${system}.callPackage ./nix/pkgs/default.nix { };
+        default = nixpkgs.legacyPackages.${system}.callPackage ./nix/pkgs/default.nix { };
       });
-
-      lib = forAllSystems (system: {
-        wrapTextfoxy = pkgsForEach.${system}.callPackage ./nix/pkgs/wrapTextfoxy.nix { };
-      });
-
-      nixosModules.default = self.nixosModules.textfoxy; # convention
-      nixosModules.textfoxy = import ./nix/modules/nixos.nix inputs;
 
       homeManagerModules.default = self.homeManagerModules.textfoxy;
       homeManagerModules.textfoxy = import ./nix/modules/home-manager.nix inputs;

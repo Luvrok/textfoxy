@@ -39,21 +39,14 @@ let
       "${profileBase}/${profile}/chrome/config.css".text = cfg.configCss;
     })
     cfg.profiles);
-
-  wrappedBrowser =
-    inputs.self.lib.${system}.wrapTextfoxy
-      (if cfg.browser == "librewolf" then pkgs.librewolf-unwrapped else pkgs.firefox-unwrapped)
-      { inherit (cfg) configCss; };
 in
 {
-
   imports = [
     ./options.nix
     (lib.mkChangedOptionModule [ "textfoxy" "profile" ] [ "textfoxy" "profiles" ] (
       config:
       let
         profile = lib.getAttrFromPath [ "textfoxy" "profile" ] config;
-
       in
       [ profile ]
     ))
@@ -71,7 +64,6 @@ in
     (lib.mkIf (cfg.browser == "firefox") {
       programs.firefox = {
         enable = true;
-        package = wrappedBrowser;
         profiles = mkProfiles;
       };
 
@@ -81,7 +73,6 @@ in
     (lib.mkIf (cfg.browser == "librewolf") {
       programs.librewolf = {
         enable = true;
-        package = wrappedBrowser;
         profiles = mkProfiles;
       };
 
