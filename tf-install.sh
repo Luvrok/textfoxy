@@ -1,5 +1,6 @@
-#!/bin/bash
-# textfox installation script
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 print_logo() {
   cat <<EOF
@@ -13,18 +14,72 @@ EOF
 }
 
 clean_path() {
-  local fp="$1"
-  fp="${fp/#\~/$HOME}" # Expand ~ to $HOME
-  fp="${fp%/}"         # Remove trailing slash if exists
-  fp="${fp/\/\//\/}"   # Remove double slashes
-  fp="${fp//\'/}"      # Remove single quotes
-  fp="${fp//\"/}"      # Remove double quotes
-  echo "$fp"
+  local fp="${1:-}"
+
+  fp="${fp/#\~/$HOME}"
+  fp="${fp%/}"
+  while [[ "$fp" == *"//"* ]]; do
+    fp="${fp//\/\//\/}"
+  done
+  fp="${fp//\'/}"
+  fp="${fp//\"/}"
+
+  printf '%s\n' "$fp"
+}
+
+choose_browser() {
+  local choice
+
+  echo "Choose browser:"
+  echo "1) Firefox"
+  echo "2) LibreWolf"
+  read -rp "Selection [1/2]: " choice
+
+  case "$choice" in
+    1|"")
+      BROWSER_NAME="Firefox"
+      PROFILE_ROOT="$HOME/.mozilla/firefox"
+      ;;
+    2)
+      BROWSER_NAME="LibreWolf"
+      PROFILE_ROOT="$HOME/.librewolf"
+      ;;
+    *)
+      echo "[!!] Invalid selection"
+      exit 1
+      ;;
+  esac
+}
+
+ask_profile_path() {
+  local fp
+
+  echo
+  echo "Selected browser: ${BROWSER_NAME}"
+  echo "Default profile root: ${PROFILE_ROOT}"
+
+  if [[ "$BROWSER_NAME" == "LibreWolf" ]]; then
+    echo "If that path does not exist, check: ~/.config/librewolf/librewolf"
+  fi
+
+  if [[ "${1:-}" != "" ]]; then
+    PROFILE_PATH="$(clean_path "$1")"
+  else
+    read -rp "Path to ${BROWSER_NAME} profile: " fp
+    PROFILE_PATH="$(clean_path "$fp")"
+  fi
+
+  while [[ ! -d "$PROFILE_PATH" ]]; do
+    echo "[!!] Directory does not exist: ${PROFILE_PATH}"
+    read -rp "Path to ${BROWSER_NAME} profile: " fp
+    PROFILE_PATH="$(clean_path "$fp")"
+  done
 }
 
 backup_existing_profile() {
-  local fp="$1"
-  fp="$(clean_path "${fp}")"
+  local fp
+  fp="$(clean_path "$1")"
+
   if [[ -d "${fp}/chrome" ]]; then
     echo "[!!] Backing up existing chrome directory..."
     mv -v "${fp}/chrome" "${fp}/chrome-$(date +%Y%m%d_%H%M%S).bak"
@@ -32,59 +87,56 @@ backup_existing_profile() {
 }
 
 copy_chrome() {
-  local fp="$1"
-  fp="$(clean_path "${fp}")"
-  if [[ -d "${fp}" ]]; then
-    echo "Copying textfox/chrome/ -> ${fp}/chrome/"
-    cp -r "chrome" "${fp}/chrome"
-  else
-    echo "The specified Firefox profile path does not exist: ${fp}"
+  local fp
+  fp="$(clean_path "$1")"
+
+  if [[ ! -d "./chrome" ]]; then
+    echo "[!!] Missing ./chrome directory near the script"
     return 1
   fi
+
+  echo "Copying ./chrome -> ${fp}/chrome"
+  cp -r "./chrome" "${fp}/chrome"
 }
 
 install_user_js() {
-  local fp="$1"
-  fp="$(clean_path "${fp}")"
+  local fp
+  local install_js
 
-  # Optionally install user.js
+  fp="$(clean_path "$1")"
+
+  if [[ ! -f "./user.js" ]]; then
+    echo "user.js not found, skipping."
+    return 0
+  fi
+
   read -rp "Do you want to install the user.js file? (Y/N): " install_js
-
   case "$install_js" in
-  [Yy]*)
-    cp -v "user.js" "$fp/user.js"
-    ;;
-  *)
-    echo "Skipping user.js installation."
-    ;;
+    [Yy]*)
+      cp -v "./user.js" "${fp}/user.js"
+      ;;
+    *)
+      echo "Skipping user.js installation."
+      ;;
   esac
 }
 
 tf_install() {
-  printf "\nInstalling textfox...\n"
-  local fp
-  if [[ "$#" -eq 1 ]]; then
-    fp="$(clean_path "$1")"
-  else
-    read -rp "Path to Firefox profile: " fp
-    fp="$(clean_path "${fp}")"
-  fi
+  local arg_path="${1:-}"
 
-  ffpp="$(clean_path "${fp}")"
-  if [[ ! -d "${ffpp}" ]]; then
-    echo "[!!] Directory ${ffpp} does not exist"
-    while [[ ! -d "${ffpp}" ]]; do
-      read -rp "Path to Firefox profile: " fp
-      ffpp="$(clean_path "${fp}")"
-    done
-  fi
+  printf "\nInstalling textfoxy...\n"
 
-  echo "Using Firefox Profile @ ${ffpp}"
-  backup_existing_profile "${ffpp}"
-  copy_chrome "${ffpp}"
-  install_user_js "${ffpp}"
+  choose_browser
+  ask_profile_path "$arg_path"
+
+  echo "Using ${BROWSER_NAME} profile @ ${PROFILE_PATH}"
+
+  backup_existing_profile "${PROFILE_PATH}"
+  copy_chrome "${PROFILE_PATH}"
+  install_user_js "${PROFILE_PATH}"
+
   printf "✓ Installation completed\n"
 }
 
 print_logo
-tf_install "$@"
+tf_install "${1:-}"

@@ -1,4 +1,3 @@
-
 ```
  _            _    __
 | |_ _____  _| |_ / _| _____  ___   _
@@ -8,20 +7,20 @@
                                 |___/
 ```
 
-fork textfox with librewolf and sidebery support (firefox supported as well)
+A fork of textfox, a Firefox theme inspired by Spotify TUI, with LibreWolf and Sidebery support. Firefox is supported as well.
 
 ## Preview
 
-![image](https://github.com/adriankarlen/textfox/blob/main/misc/vertical-tabs.png)
+![image](https://github.com/Luvrok/textfoxy/blob/main/misc/vertical-tabs.png)
 
-![image](https://github.com/adriankarlen/textfox/blob/main/misc/horizontal-tabs.png)
+![image](https://github.com/Luvrok/textfoxy/blob/main/misc/horizontal-tabs.png)
 
 > [!NOTE]
 > The color scheme used in the pictures is [Rosé Pine Moon](https://github.com/rose-pine/firefox).
 > `textfox` tries to not hard code any colors, [Firefox Color extension](https://addons.mozilla.org/en-US/firefox/addon/firefox-color/) is the
-> recommended approach to coloring Firefox with `textfox`.
+> recommended approach to coloring Firefox with `textfoxy`.
 
-## Prequisites
+## Prerequisites
 
 - Sidebery (optional)
 
@@ -37,7 +36,7 @@ fork textfox with librewolf and sidebery support (firefox supported as well)
 > This script automates file writes, use with caution.
 
 > [!NOTE]
-> The installation script copies to contents of the repos `chrome` directory to
+> The installation script copies the contents of the repo's `chrome` directory to the specified path.
 > the path specified, this way your `config.css` or any other `css`-files not
 > part of the repo will be kept.
 
@@ -47,24 +46,14 @@ fork textfox with librewolf and sidebery support (firefox supported as well)
 2. Go to `about:profiles`
 3. Find the names of target profiles (ex: `Profile: Default`)
 4. Open the profile's root directory
-5. Move the files chrome directory and user.js there
+5. Move the `chrome` directory and `user.js` there.
 6. Restart Firefox
-
-> [!IMPORTANT]
-> textfox now supports horizontal tabs, to enable them change the
-> `--tf-display-horizontal-tabs` variable in your `config.css` to `block`. See
-> [CSS configurations](#css-configurations) for more info.
-
-> [!NOTE]
-> If you don't want to use the provided user.js, please read through it and
-> apply the settings in `about:config` manually. These are needed for the css to
-> work.
 
 ### Nix
 
-This repo includes a Nix flake that exposes a home-manager module that installs textfox and sidebery.
+This repo includes a Nix flake that exposes a home-manager module that installs textfoxy and sidebery.
 
-To enable the module, add the repo as a flake input, import the module, and enable textfox.
+To enable the module, add the repo as a flake input, import the module, and enable textfoxy.
 
 <details><summary>Install using your home-manager module defined within your `nixosConfigurations`:</summary>
 
@@ -81,7 +70,7 @@ To enable the module, add the repo as a flake input, import the module, and enab
            inputs.nixpkgs.follows = "nixpkgs";
          };
 
-         textfox.url = "github:adriankarlen/textfox";
+         textfoxy.url = "github:Luvrok/textfoxy";
          # ---Snip---
       }
 
@@ -105,12 +94,22 @@ To enable the module, add the repo as a flake input, import the module, and enab
 
 # home.nix
 
-imports = [ inputs.textfox.homeManagerModules.default ];
+imports = [ inputs.textfoxy.homeManagerModules.default ];
 
-textfox = {
+textfoxy = {
     enable = true;
     # Replace with the names of profiles, defined in home-manager, or find existing ones in `about:profiles`
-    profiles = ["profile_1" "profile_2"];
+    browsers = {
+      librewolf = {
+        enable = true;
+        profiles = ["life" "work"];
+      };
+
+      firefox = {
+        enable = true;
+        profiles = ["life" "work"];
+      };
+    };
     config = {
         # Optional config
     };
@@ -132,16 +131,16 @@ textfox = {
          inputs.nixpkgs.follows = "nixpkgs";
        };
 
-       textfox.url = "github:adriankarlen/textfox";
+       textfoxy.url = "github:Luvrok/textfoxy";
        # ---Snip---
     }
 
-    outputs = {nixpkgs, home-manager, textfox ...}: {
+    outputs = {nixpkgs, home-manager, textfoxy ...}: {
         homeConfigurations."user@hostname" = home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgs.legacyPackages.x86_64-linux;
 
             modules = [
-                textfox.homeManagerModules.default
+                textfoxy.homeManagerModules.default
                 # ...
             ];
         };
@@ -152,10 +151,20 @@ textfox = {
 
   # home.nix
 
-  textfox = {
+  textfoxy = {
       enable = true;
       # Replace with the names of profiles, defined in home-manager, or find existing ones in `about:profiles`
-      profiles = ["profile_1" "profile_2"];
+      browsers = {
+        librewolf = {
+          enable = true;
+          profiles = ["life" "work"];
+        };
+
+        firefox = {
+          enable = true;
+          profiles = ["life" "work"];
+        };
+      };
       config = {
           # Optional config
       };
@@ -169,10 +178,20 @@ All configuration options are optional and can be set as this example shows (rea
 
 ```nix
 
-  textfox = {
+  textfoxy = {
       enable = true;
       # Replace with the names of profiles, defined in home-manager, or find existing ones in `about:profiles`
-      profiles = ["profile_1" "profile_2"];
+      browsers = {
+        librewolf = {
+          enable = true;
+          profiles = ["life" "work"];
+        };
+
+        firefox = {
+          enable = true;
+          profiles = ["life" "work"];
+        };
+      };
       config = {
         background = {
           color = "#123456";
@@ -221,7 +240,7 @@ All configuration options are optional and can be set as this example shows (rea
 
 ### Sidebery
 
-Sidebery css is being set from within `content/sidebery` (applied as content to
+Sidebery CSS is provided from `content/sidebery` (applied as content to
 the sidebery url). If you have any pre-existing css set from within the sidebery
 settings, they might clash or make it so that the sidebery style does not match
 the example.
@@ -248,7 +267,7 @@ the same settings are used (these can be set in about:config).
 | `shyfox.enable.context.menu.icons` | Many context menu items get icons | No icons in context menus |
 
 ### CSS configurations
-The theme ships with a `defaults.css`, this file can be overridden by creating a
+The theme ships with `defaults.css`, this file can be overridden by creating a
 `config.css` inside the chrome directory.
 
 #### Defaults
@@ -277,15 +296,6 @@ The theme ships with a `defaults.css`, this file can be overridden by creating a
 }
 
 ```
-
-### Changing the new tab logo
-
-The new tab logo can be any string you want, to create a string with line breaks
-add a `\A` at every line break, also make sure to break any backslashes, eg. if
-you want a `\`, you need to write `\\`. I used [this tool](https://www.patorjk.com/software/taag/#p=display&f=Slant&t=textfox)
-to create the current logo.
-
-Wanna hide the logo? Simply pass an empty string as the logo.
 
 ### Recipes
 
@@ -365,3 +375,4 @@ Feel free to open a PR and add it here!
 ## Acknowledgements
 
 [Naezr](https://github.com/Naezr) - Icon logic and some sidebery logic.
+[textfox](https://github.com/adriankarlen/textfox) - original textfox
