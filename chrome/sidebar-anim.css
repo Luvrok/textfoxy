@@ -1,14 +1,11 @@
 :root {
   --tf-sidebar-width: 280px;
   --tf-sidebar-inset: 8px;
-  --tf-sidebar-peek: 6px;
-  --tf-catcher-extra: 12px;
-  --tf-sidebar-anim: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  --tf-navbar-height: 50px;
+  --tf-anim: 0.22s cubic-bezier(.4,0,.2,1);
 }
 
-#browser {
-  position: relative;
-}
+#browser { position: relative; }
 
 #sidebar-box:not([hidden]) {
   position: absolute !important;
@@ -21,51 +18,30 @@
   min-width: 0 !important;
   height: auto !important;
   margin: 0 !important;
-  transition:
-    left var(--tf-sidebar-anim),
-    border-color var(--tf-border-transition) !important;
-
-  & > * {
-    transition: opacity var(--tf-sidebar-anim);
-  }
+  transition: left var(--tf-anim), border-color var(--tf-border-transition) !important;
 }
 
 #main-window:not([customizing]) #browser #tabbrowser-tabbox {
-  margin-left: calc(
-    var(--tf-sidebar-width) + var(--tf-sidebar-inset) * 2
-  ) !important;
-  transition: margin-left var(--tf-sidebar-anim) !important;
+  margin-left: calc(var(--tf-sidebar-width) + var(--tf-sidebar-inset) * 2) !important;
+  transition: margin-left var(--tf-anim) !important;
 }
 
-#main-window[titlepreface*="᠎"] {
-  #sidebar-box:not([hidden]) {
-    left: calc(var(--tf-sidebar-peek) - var(--tf-sidebar-width));
-  }
+#navigator-toolbox {
+  transition: margin-top var(--tf-anim), opacity var(--tf-anim) !important;
+}
 
-  #sidebar-box:not([hidden]) > * {
-    opacity: 0;
-  }
+#main-window[titlepreface="᠎"],
+#main-window[titlepreface="​‌"],
+#main-window[titlepreface="᠎​"],
+#main-window[titlepreface="‌"] {
+  #sidebar-box:not([hidden]) { left: calc(-1 * var(--tf-sidebar-width) - var(--tf-sidebar-inset) * 2); }
+  #browser #tabbrowser-tabbox { margin-left: var(--tf-sidebar-inset) !important; }
+}
 
-  #sidebar-box:not([hidden])::after {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    height: 100%;
-    right: calc(-1 * var(--tf-catcher-extra));
-    width: calc(var(--tf-sidebar-peek) + var(--tf-catcher-extra));
-  }
-
-  #browser #tabbrowser-tabbox {
-    margin-left: var(--tf-sidebar-inset) !important;
-  }
-
-  &:has(#sidebar-box:hover, #sidebar-box:focus-within) {
-    #sidebar-box:not([hidden]) {
-      left: var(--tf-sidebar-inset);
-    }
-    #sidebar-box:not([hidden]) > * {
-      opacity: 1;
-    }
-  }
+#main-window[titlepreface="​"] #navigator-toolbox,
+#main-window[titlepreface="᠎‌"] #navigator-toolbox,
+#main-window[titlepreface="᠎​"] #navigator-toolbox,
+#main-window[titlepreface="‌"] #navigator-toolbox {
+  margin-top: calc(-1 * var(--tf-navbar-height));
+  opacity: 0;
 }
