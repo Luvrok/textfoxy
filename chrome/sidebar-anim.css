@@ -26,6 +26,13 @@
   transition: margin-left var(--tf-anim) !important;
 }
 
+#main-window[inDOMFullscreen="true"] #sidebar-box:not([hidden]) {
+  left: calc(-1 * var(--tf-sidebar-width) - var(--tf-sidebar-inset) * 2) !important;
+}
+#main-window[inDOMFullscreen="true"] #browser #tabbrowser-tabbox {
+  margin-left: 0 !important;
+}
+
 #navigator-toolbox {
   transition: margin-top var(--tf-anim), opacity var(--tf-anim) !important;
 }
