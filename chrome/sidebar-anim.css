@@ -1,0 +1,71 @@
+:root {
+  --tf-sidebar-width: 280px;
+  --tf-sidebar-inset: 8px;
+  --tf-sidebar-peek: 6px;
+  --tf-catcher-extra: 12px;
+  --tf-sidebar-anim: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#browser {
+  position: relative;
+}
+
+#sidebar-box:not([hidden]) {
+  position: absolute !important;
+  z-index: 3;
+  top: var(--tf-sidebar-inset);
+  bottom: var(--tf-sidebar-inset);
+  left: var(--tf-sidebar-inset);
+  width: var(--tf-sidebar-width) !important;
+  max-width: var(--tf-sidebar-width) !important;
+  min-width: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  transition:
+    left var(--tf-sidebar-anim),
+    border-color var(--tf-border-transition) !important;
+
+  & > * {
+    transition: opacity var(--tf-sidebar-anim);
+  }
+}
+
+#main-window:not([customizing]) #browser #tabbrowser-tabbox {
+  margin-left: calc(
+    var(--tf-sidebar-width) + var(--tf-sidebar-inset) * 2
+  ) !important;
+  transition: margin-left var(--tf-sidebar-anim) !important;
+}
+
+#main-window[titlepreface*="᠎"] {
+  #sidebar-box:not([hidden]) {
+    left: calc(var(--tf-sidebar-peek) - var(--tf-sidebar-width));
+  }
+
+  #sidebar-box:not([hidden]) > * {
+    opacity: 0;
+  }
+
+  #sidebar-box:not([hidden])::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    height: 100%;
+    right: calc(-1 * var(--tf-catcher-extra));
+    width: calc(var(--tf-sidebar-peek) + var(--tf-catcher-extra));
+  }
+
+  #browser #tabbrowser-tabbox {
+    margin-left: var(--tf-sidebar-inset) !important;
+  }
+
+  &:has(#sidebar-box:hover, #sidebar-box:focus-within) {
+    #sidebar-box:not([hidden]) {
+      left: var(--tf-sidebar-inset);
+    }
+    #sidebar-box:not([hidden]) > * {
+      opacity: 1;
+    }
+  }
+}
