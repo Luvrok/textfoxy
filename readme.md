@@ -252,7 +252,8 @@ counts) is the text color at 45%. `font.color`, `font.accent` and
 The theme targets Firefox's new design ("Nova", `browser.nova.enabled`, on by
 default since Firefox 158) and the old one, and works with `sidebar.revamp`
 on or off: the Sidebery panel header with the panel switcher is hidden in
-both.
+both. To turn Nova off, set `browser.nova.enabled` to `false` ("Enable the
+Nova redesign" in the settings).
 
 ### Sidebery
 

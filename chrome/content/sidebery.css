@@ -248,6 +248,12 @@
     opacity: 1 !important;
   }
 
+  /* no container stripe on the right of the tabs, the address bar shows
+     the container */
+  .Tab .ctx {
+    display: none !important;
+  }
+
   /* tree lines */
   .Tab .body::after {
     background-color: var(--tf-border) !important;

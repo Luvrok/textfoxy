@@ -2,7 +2,6 @@ inputs:
 { config, lib, pkgs, ... }:
 let
   inherit (pkgs.stdenv.hostPlatform) system;
-  inherit (builtins) baseNameOf;
   cfg = config.textfoxy;
   textfoxyAssets = inputs.self.packages.${system}.default;
 
@@ -29,17 +28,24 @@ let
     })
     browserProfiles);
 
+  # the chrome directory with config.css in it. home-manager links every file
+  # into the store, and content processes (sidebery, about: pages) resolve
+  # userContent.css's imports next to the file it links to: config.css has
+  # to be in the same store path, or sidebery gets none of the colors.
+  # userChrome.css comes from the profiles' userChrome option instead
+  chromeDir = pkgs.runCommand "textfoxy-chrome" { } ''
+    cp -r ${textfoxyAssets}/chrome $out
+    chmod -R u+w $out
+    rm $out/userChrome.css
+    cp ${pkgs.writeText "config.css" cfg.configCss} $out/config.css
+  '';
+
   mkChromeFiles = profileBase: profiles: lib.mkMerge (map
     (profile: {
       "${profileBase}/${profile}/chrome" = {
-        source = pkgs.lib.cleanSourceWith {
-          src = "${textfoxyAssets}/chrome";
-          filter = path: type: !(type == "regular" && baseNameOf path == "userChrome.css");
-        };
+        source = chromeDir;
         recursive = true;
       };
-
-      "${profileBase}/${profile}/chrome/config.css".text = cfg.configCss;
     })
     profiles);
 in
