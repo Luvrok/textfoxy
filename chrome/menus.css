@@ -180,3 +180,19 @@ panel,
 #unified-extensions-manage-extensions {
   margin-bottom: 4px !important;
 }
+/* the "⋯" of an extension: one grey square on its icon, not one on the
+   button and another on the icon */
+.unified-extensions-item-menu-button {
+  background-color: transparent !important;
+
+  &:not([disabled]):is(:hover, [open], :focus-visible) {
+    background-color: transparent !important;
+
+    > .toolbarbutton-icon {
+      background-color: var(--tf-select) !important;
+    }
+  }
+  > .toolbarbutton-icon {
+    border-radius: var(--tf-rounding) !important;
+  }
+}

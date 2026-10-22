@@ -193,8 +193,8 @@
   }
 
   /* a frame, the accent on hover, grey and framed with the accent when
-     active, dim while unloaded like the other unloaded tabs */
-  /* the frame is on ::before, sidebery's hover layer, which covers the tab */
+     active. the frame is on ::before, sidebery's hover layer, which covers
+     the tab */
   .Tab[data-pin="true"] .body {
     background-color: transparent !important;
     box-shadow: none !important;
@@ -208,9 +208,17 @@
   .Tab[data-pin="true"][data-active="true"] .body {
     background-color: var(--tf-select) !important;
   }
-  .Tab[data-pin="true"]:is([data-discarded="true"], [data-pending="true"]):not([data-active="true"]) :is(.fav, .fav-icon) {
+  /* pinned tabs look unloaded unless they are the active one: firefox gives
+     a restored pinned tab its browser right away, so for sidebery it is never
+     "discarded" even before it loads. hover brings the icon up */
+  .Tab[data-pin="true"]:not([data-active="true"]) :is(.fav, .fav-icon) {
     opacity: var(--tabs-discarded-favicon-opacity, 0.48) !important;
     filter: grayscale(0.6);
+    transition: opacity 0.2s ease, filter 0.2s ease;
+  }
+  .Tab[data-pin="true"]:not([data-active="true"]):hover :is(.fav, .fav-icon) {
+    opacity: 1 !important;
+    filter: none;
   }
 
   /* remove bottom margin */
