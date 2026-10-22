@@ -142,15 +142,14 @@ toolbarbutton.bookmark-item:not(.subviewbutton) {
 }
 
 /*
- * toolbar buttons, like the tags of the bar: an accent tint on hover, filled
- * with the accent while pressed or while their menu is open
+ * toolbar buttons: a soft grey on hover, a lighter one while pressed or
+ * while their menu is open
  */
 :is(.toolbarbutton-1, #PanelUI-menu-button):not([disabled]) {
   &:is([open], :hover:active) {
     > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack, .toolbarbutton-text) {
-      background-color: var(--tf-accent) !important;
-      color: var(--tf-accent-fg) !important;
-      fill: var(--tf-accent-fg) !important;
+      background-color: var(--tf-select) !important;
+      color: var(--tf-fg) !important;
     }
   }
 }

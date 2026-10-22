@@ -22,7 +22,9 @@
   --tf-navbar-padding: 4px; /* navbar padding */
   --tf-bookmarks-alignment: center; /* alignment of bookmarks in the bookmarks toolbar (if you have many bookmarks, left is recommended) */
 
-  /* derived, not meant to be set: secondary text and the hover of rows and buttons */
+  /* derived, not meant to be set: secondary text, the hover of rows and
+     buttons, and the row under the cursor (about #282828 on #171717) */
   --tf-dim: color-mix(in srgb, var(--tf-fg) 45%, transparent);
-  --tf-hover: color-mix(in srgb, var(--tf-accent) 25%, transparent);
+  --tf-hover: color-mix(in srgb, var(--tf-fg) 4%, var(--tf-bg));
+  --tf-select: color-mix(in srgb, var(--tf-fg) 8%, var(--tf-bg));
 }

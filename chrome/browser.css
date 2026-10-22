@@ -83,3 +83,12 @@ moz-message-bar {
   border-radius: var(--tf-rounding) !important;
   box-shadow: none !important;
 }
+
+/* the status line at the bottom: links, "Read ..." while loading */
+#statuspanel-label {
+  background-color: var(--tf-bg) !important;
+  color: var(--tf-fg) !important;
+  border: var(--border-width) solid var(--tf-border) !important;
+  border-radius: var(--tf-rounding) !important;
+  box-shadow: none !important;
+}

@@ -1,7 +1,7 @@
 /*
  * menus and panels, drawn like the quickshell menus: the background, a 1px
- * accent frame, square, no shadow. the row under the cursor is filled with
- * the accent, the keys and other info are dim
+ * accent frame, square, no shadow. the row under the cursor is grey, the
+ * keys and other info are dim
  */
 :is(menupopup, panel):not(.autoscroller) {
   --panel-background-color: var(--tf-bg) !important;
@@ -17,32 +17,24 @@
   --arrowpanel-color: var(--tf-fg) !important;
   --arrowpanel-border-color: var(--tf-accent) !important;
 
-  /* like the rows of the menus: 3px and 12px around the text */
-  --menuitem-padding-block: 3px !important;
-  --menuitem-padding-inline: 12px !important;
-  --panel-menuitem-padding: 3px 12px !important;
-  --panel-menuitem-margin: 0 !important;
-  --panel-menuitem-margin-inline: 0 !important;
-  --panel-separator-padding-inline: 12px !important;
-
   &::part(content) {
     border-width: var(--tf-border-width) !important;
   }
+}
+
+/* context menus: rows like the menus', 3px and 12px around the text.
+   panels keep firefox's spacing, their rows are laid out for it */
+menupopup {
+  --menuitem-padding-block: 3px !important;
+  --menuitem-padding-inline: 12px !important;
 }
 
 /* the hover and the cursor, the same row in a menu */
 menu,
 menuitem {
   &[_moz-menuactive]:not([disabled]) {
-    background-color: var(--tf-accent) !important;
-    color: var(--tf-accent-fg) !important;
-    --menuitem-icon-fill: var(--tf-accent-fg) !important;
-    fill: var(--tf-accent-fg) !important;
-
-    .menu-accel,
-    .menu-iconic-accel {
-      color: var(--tf-accent-fg) !important;
-    }
+    background-color: var(--tf-select) !important;
+    color: var(--tf-fg) !important;
   }
   &[_moz-menuactive][disabled] {
     background-color: transparent !important;
@@ -80,19 +72,9 @@ menucaption,
   border-radius: var(--tf-rounding) !important;
 
   &:not([disabled]):is(:hover, [open], [_moz-menuactive], :focus-visible) {
-    background-color: var(--tf-accent) !important;
-    color: var(--tf-accent-fg) !important;
-    fill: var(--tf-accent-fg) !important;
+    background-color: var(--tf-select) !important;
+    color: var(--tf-fg) !important;
     outline: none !important;
-
-    > .toolbarbutton-icon {
-      fill: var(--tf-accent-fg) !important;
-    }
-    .subviewbutton-shortcut,
-    .toolbarbutton-text,
-    .toolbarbutton-multiline-text {
-      color: var(--tf-accent-fg) !important;
-    }
   }
   &[disabled] {
     color: var(--tf-dim) !important;
@@ -101,8 +83,8 @@ menucaption,
 
 /* the menu's own zoom and edit buttons: the item hovers, not the row */
 .toolbaritem-combined-buttons:is(:not([cui-areatype="toolbar"]), [overflowedItem="true"]) > .subviewbutton:not([disabled]):is(:hover, :hover:active) {
-  background-color: var(--tf-accent) !important;
-  color: var(--tf-accent-fg) !important;
+  background-color: var(--tf-select) !important;
+  color: var(--tf-fg) !important;
 }
 
 .subviewbutton-shortcut,
@@ -136,8 +118,8 @@ panel > panel-list {
   border: none !important;
 }
 panel-item {
-  --button-background-color-menu-hover: var(--tf-accent);
-  --button-text-color-menu-hover: var(--tf-accent-fg);
+  --button-background-color-menu-hover: var(--tf-select);
+  --button-text-color-menu-hover: var(--tf-fg);
 }
 
 /* tooltips: dim frame, no shadow */

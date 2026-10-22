@@ -21,10 +21,10 @@
   --toolbar-field-border-color-focus: transparent !important;
   --toolbar-field-focus-border-color: transparent !important;
   /* the theme's selection in the address bar and the find bar */
-  --lwt-toolbar-field-highlight: var(--tf-accent) !important;
-  --lwt-toolbar-field-highlight-text: var(--tf-accent-fg) !important;
+  --lwt-toolbar-field-highlight: color-mix(in srgb, var(--tf-fg) 20%, var(--tf-bg)) !important;
+  --lwt-toolbar-field-highlight-text: var(--tf-fg) !important;
 
-  /* the accent is the cursor: focus rings, checkboxes, primary buttons */
+  /* the accent: focus rings, checkboxes, primary buttons */
   --focus-outline-color: var(--tf-accent) !important;
   --color-accent-primary: var(--tf-accent) !important;
   --color-accent-primary-hover: color-mix(in srgb, var(--tf-accent) 85%, var(--tf-fg)) !important;
@@ -34,22 +34,22 @@
   --button-text-color-primary-hover: var(--tf-accent-fg) !important;
   --button-text-color-primary-active: var(--tf-accent-fg) !important;
 
-  /* buttons: orange tint on hover, filled orange when pressed or open */
+  /* buttons: a soft grey on hover, a lighter one while pressed or open */
   --toolbarbutton-background-color-hover: var(--tf-hover) !important;
-  --toolbarbutton-background-color-active: var(--tf-accent) !important;
+  --toolbarbutton-background-color-active: var(--tf-select) !important;
   --toolbarbutton-hover-background: var(--tf-hover) !important;
-  --toolbarbutton-active-background: var(--tf-accent) !important;
-  --toolbarbutton-checked-background: var(--tf-hover) !important;
+  --toolbarbutton-active-background: var(--tf-select) !important;
+  --toolbarbutton-checked-background: var(--tf-select) !important;
   --toolbarbutton-outline-color: transparent !important;
   --toolbarbutton-outline-color-hover: transparent !important;
   --toolbarbutton-outline-color-active: transparent !important;
   --toolbarbutton-outline-color-selected: transparent !important;
   --button-background-color-ghost-hover: var(--tf-hover) !important;
-  --button-background-color-ghost-active: var(--tf-accent) !important;
-  --button-text-color-ghost-active: var(--tf-accent-fg) !important;
+  --button-background-color-ghost-active: var(--tf-select) !important;
+  --button-text-color-ghost-active: var(--tf-fg) !important;
   --button-background-color-hover: var(--tf-hover) !important;
-  --button-background-color-active: var(--tf-accent) !important;
-  --button-text-color-active: var(--tf-accent-fg) !important;
+  --button-background-color-active: var(--tf-select) !important;
+  --button-text-color-active: var(--tf-fg) !important;
 
   /* buttons in panels and dialogs: a dim frame, the accent on hover, like
      the tiles of the menus. the primary one is filled with the accent */
@@ -65,10 +65,10 @@
   --button-background-color-primary-hover: var(--color-accent-primary-hover) !important;
   --button-background-color-primary-active: var(--color-accent-primary-active) !important;
 
-  /* address bar results: the selected row is the orange cursor */
+  /* address bar results: the selected row is grey */
   --urlbarview-background-color-hover: var(--tf-hover) !important;
-  --urlbarview-background-color-selected: var(--tf-accent) !important;
-  --urlbarview-text-color-selected: var(--tf-accent-fg) !important;
+  --urlbarview-background-color-selected: var(--tf-select) !important;
+  --urlbarview-text-color-selected: var(--tf-fg) !important;
   --urlbarview-text-color-secondary: var(--tf-dim) !important;
   --urlbarview-text-color-action: var(--tf-dim) !important;
   --urlbarview-separator-color: var(--tf-border) !important;
@@ -77,13 +77,13 @@
   --urlbar-box-background-color: transparent !important;
   --urlbar-box-background-color-focus: transparent !important;
   --urlbar-box-background-color-hover: var(--tf-hover) !important;
-  --urlbar-box-background-color-active: var(--tf-accent) !important;
-  --urlbar-box-text-color-active: var(--tf-accent-fg) !important;
+  --urlbar-box-background-color-active: var(--tf-select) !important;
+  --urlbar-box-text-color-active: var(--tf-fg) !important;
 
   /* tabs */
   --tab-selected-outline-color: transparent !important;
-  --tab-selected-bgcolor: var(--tf-accent) !important;
-  --tab-selected-textcolor: var(--tf-accent-fg) !important;
+  --tab-selected-bgcolor: var(--tf-select) !important;
+  --tab-selected-textcolor: var(--tf-fg) !important;
   --tab-hover-background-color: var(--tf-hover) !important;
   --tab-min-height: 29px !important;
 
@@ -203,10 +203,10 @@
   }
 }
 
-/* selected text is on the cursor too, like the text lines of the menus */
+/* selected text: a lighter grey */
 input::selection,
 textarea::selection,
 ::selection {
-  background-color: var(--tf-accent) !important;
-  color: var(--tf-accent-fg) !important;
+  background-color: color-mix(in srgb, var(--tf-fg) 20%, var(--tf-bg)) !important;
+  color: var(--tf-fg) !important;
 }

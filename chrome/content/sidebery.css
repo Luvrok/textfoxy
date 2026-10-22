@@ -1,7 +1,7 @@
 /*
- * sidebery, drawn like the quickshell bar and menus: the panels are the
- * bar's tags, the active tab is the menu's orange cursor, pinned tabs are
- * the tiles of the tools menu, the context menu is a menu with an accent
+ * sidebery, drawn like the quickshell bar and menus: the active tab and the
+ * active panel are the grey cursor, pinned tabs are the tiles of the tools
+ * menu (dim while unloaded), the context menu is a menu with an accent
  * frame. textfoxy's colors win over the ones sidebery takes from the theme
  */
 @-moz-document regexp("^moz-extension://.*?/(sidebar/sidebar|page\\.setup/setup|page\\.group/group)\\.html.*")
@@ -54,26 +54,26 @@
     --status-notice: var(--tf-accent) !important;
     --border: var(--tf-border) !important;
 
-    /* hover is the accent tint, the cursor is the accent */
+    /* hover is a soft grey, the cursor a lighter one */
     --frame-el-overlay-hover-bg: var(--tf-hover) !important;
-    --frame-el-overlay-clicked-bg: color-mix(in srgb, var(--tf-accent) 40%, transparent) !important;
+    --frame-el-overlay-clicked-bg: var(--tf-select) !important;
     --frame-el-overlay-selected-bg: var(--tf-hover) !important;
     --frame-el-overlay-selected-border: var(--tf-accent) !important;
     --toolbar-el-overlay-hover-bg: var(--tf-hover) !important;
-    --toolbar-el-overlay-clicked-bg: color-mix(in srgb, var(--tf-accent) 40%, transparent) !important;
-    --toolbar-el-overlay-active-bg: var(--tf-accent) !important;
+    --toolbar-el-overlay-clicked-bg: var(--tf-select) !important;
+    --toolbar-el-overlay-active-bg: var(--tf-select) !important;
     --toolbar-el-overlay-active-border: transparent !important;
     --toolbar-el-overlay-selected-bg: var(--tf-hover) !important;
     --toolbar-el-overlay-selected-border: var(--tf-accent) !important;
-    --active-el-bg: var(--tf-accent) !important;
-    --active-el-fg: var(--tf-accent-fg) !important;
+    --active-el-bg: var(--tf-select) !important;
+    --active-el-fg: var(--tf-fg) !important;
     --active-el-shadow: none !important;
     --active-el-overlay-hover-bg: transparent !important;
 
     --tabs-normal-bg: transparent !important;
     --tabs-normal-fg: var(--tf-fg) !important;
-    --tabs-activated-bg: var(--tf-accent) !important;
-    --tabs-activated-fg: var(--tf-accent-fg) !important;
+    --tabs-activated-bg: var(--tf-select) !important;
+    --tabs-activated-fg: var(--tf-fg) !important;
     --tabs-activated-shadow: none !important;
     --tabs-progress-bg: var(--tf-hover) !important;
     --tabs-lvl-opacity: 1 !important;
@@ -120,16 +120,13 @@
   }
 
   .NavigationBar .nav-item {
+    /* the open panel: the grey cursor, its icon in the accent */
     &[data-active="true"] {
-      background-color: var(--tf-accent) !important;
+      background-color: var(--tf-select) !important;
       box-shadow: none !important;
 
       .icon {
-        fill: var(--tf-accent-fg) !important;
-      }
-      .len,
-      .name-box {
-        color: var(--tf-accent-fg) !important;
+        fill: var(--tf-accent) !important;
       }
     }
     &[data-sel="true"] {
@@ -195,7 +192,8 @@
     height: var(--pin-favicon-size) !important;
   }
 
-  /* a frame, the accent on hover, filled when active */
+  /* a frame, the accent on hover, grey and framed with the accent when
+     active, dim while unloaded like the other unloaded tabs */
   .Tab[data-pin="true"] .body {
     background-color: transparent !important;
     box-shadow: inset 0 0 0 1px var(--tf-border) !important;
@@ -205,8 +203,12 @@
     box-shadow: inset 0 0 0 1px var(--tf-accent) !important;
   }
   .Tab[data-pin="true"][data-active="true"] .body {
-    background-color: var(--tf-accent) !important;
+    background-color: var(--tf-select) !important;
     box-shadow: inset 0 0 0 1px var(--tf-accent) !important;
+  }
+  .Tab[data-pin="true"]:is([data-discarded="true"], [data-pending="true"]):not([data-active="true"]) :is(.fav, .fav-icon) {
+    opacity: var(--tabs-discarded-favicon-opacity, 0.48) !important;
+    filter: grayscale(0.6);
   }
 
   /* remove bottom margin */
@@ -215,7 +217,7 @@
   }
 
   /*
-   * ─[ tabs: rows of a menu, the active one is the cursor ]───────────────
+   * ─[ tabs: rows of a menu, the active one is the grey cursor ]──────────
   */
 
   .Tab .body {
@@ -224,22 +226,18 @@
   }
 
   .Tab[data-active="true"] .body {
-    background-color: var(--tf-accent) !important;
+    background-color: var(--tf-select) !important;
 
     .title,
-    .t-box,
-    .ctx,
-    .close svg,
-    .audio svg {
-      color: var(--tf-accent-fg) !important;
-      fill: var(--tf-accent-fg) !important;
+    .t-box {
+      color: var(--tf-fg) !important;
     }
   }
 
-  /* the selected ones: the accent tint and a hairline, like the bar's hover */
+  /* the selected ones: grey with a dim hairline */
   .Tab[data-selected="true"] .body::before {
     background-color: var(--tf-hover) !important;
-    box-shadow: inset 0 0 0 1px var(--tf-accent) !important;
+    box-shadow: inset 0 0 0 1px var(--tf-dim) !important;
   }
 
   /* unloaded tabs are dim, like a row's info */
@@ -278,15 +276,8 @@
 
     &:not([data-inactive="true"]):is(:hover, [data-selected="true"]) {
       &::before {
-        background-color: var(--tf-accent) !important;
+        background-color: var(--tf-select) !important;
         opacity: 1 !important;
-      }
-      .label,
-      .icon,
-      .badge,
-      .flag-icon {
-        color: var(--tf-accent-fg) !important;
-        fill: var(--tf-accent-fg) !important;
       }
     }
     &[data-inactive="true"] {
@@ -303,7 +294,7 @@
   }
 
   .CtxMenu .icon-opt:not([data-inactive="true"]):hover::before {
-    background-color: var(--tf-accent) !important;
+    background-color: var(--tf-select) !important;
     opacity: 1 !important;
   }
 
@@ -340,8 +331,8 @@
     }
   }
 
-  /* fields of the settings and the dialogs: the chosen option is filled with
-     the accent, "off" is only framed, text fields get the search line */
+  /* fields of the settings and the dialogs: the chosen option is grey with
+     the accent text, "off" is only framed, text fields get the search line */
   :is(.SelectInput, .select-input-drop-down) .opt,
   .ToggleInput .opt {
     &::before,
@@ -351,15 +342,15 @@
   }
   .SelectInput .opt[data-active="true"]:not([data-none="true"]),
   .ToggleInput[data-active="true"] .opt.-true {
-    color: var(--tf-accent-fg) !important;
-    fill: var(--tf-accent-fg) !important;
+    color: var(--tf-accent) !important;
+    fill: var(--tf-accent) !important;
     opacity: 1 !important;
 
     > svg {
-      fill: var(--tf-accent-fg) !important;
+      fill: var(--tf-accent) !important;
     }
     &::before {
-      background-color: var(--tf-accent) !important;
+      background-color: var(--tf-select) !important;
       opacity: 1 !important;
     }
     &::after {
@@ -476,7 +467,7 @@
   }
 
   ::selection {
-    background-color: var(--tf-accent) !important;
-    color: var(--tf-accent-fg) !important;
+    background-color: color-mix(in srgb, var(--tf-fg) 20%, var(--tf-bg)) !important;
+    color: var(--tf-fg) !important;
   }
 } /* wrap end */

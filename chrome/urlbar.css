@@ -1,7 +1,7 @@
 /*
  * the address bar is flat text in the navbar's box, the box turns the accent
- * while it has the keys. the results hang under the navbar like a quickshell
- * menu: the navbar's width, an accent frame, the row under the cursor filled
+ * while it has the keys. the results hang under it like a menu: as wide as
+ * the bar, an accent frame, the row under the cursor grey
  */
 #urlbar {
   text-align: center;
@@ -21,10 +21,6 @@
 }
 
 /* the results */
-#nav-bar {
-  anchor-name: --tf-navbar;
-}
-
 #urlbar .urlbarView {
   text-align: start;
   color: var(--tf-fg) !important;
@@ -34,12 +30,10 @@
   box-shadow: none !important;
   padding: 6px 0 0 !important;
 
+  /* firefox anchors it to the bar; down to the navbar's bottom border, so
+     the two boxes share it */
   &:popover-open {
-    position-anchor: --tf-navbar !important;
-    position-area: block-end center !important;
-    inset-inline: 0 !important;
-    /* on the navbar's bottom border, so the two boxes share it */
-    margin: calc(-1 * var(--tf-border-width)) 0 0 !important;
+    margin: calc(var(--urlbar-container-padding-block, 4px) + var(--tf-navbar-padding) - var(--tf-border-width)) 0 0 !important;
   }
 }
 
@@ -63,13 +57,8 @@
   }
 
   &[selected] {
-    .urlbarView-action,
-    .urlbarView-switchToTab-accessory,
-    .urlbarView-url,
-    .urlbarView-title-separator,
-    .urlbarView-favicon {
-      color: var(--tf-accent-fg) !important;
-      fill: var(--tf-accent-fg) !important;
+    .urlbarView-title {
+      color: var(--tf-fg) !important;
     }
   }
 }
@@ -98,15 +87,13 @@
       background-color: var(--tf-hover) !important;
     }
     &[selected] {
-      background-color: var(--tf-accent) !important;
-      color: var(--tf-accent-fg) !important;
-      fill: var(--tf-accent-fg) !important;
+      background-color: var(--tf-select) !important;
     }
   }
 }
 
 /* the boxes in the bar: the search mode switcher, "Not Secure", the page
-   actions. flat, the orange tint on hover */
+   actions. flat, grey on hover */
 #urlbar .searchmode-switcher,
 #identity-box,
 #identity-icon-box,
@@ -136,10 +123,10 @@
 #searchbar-new .searchmode-switcher {
   --button-background-color-muted: transparent !important;
   --button-background-color-muted-hover: var(--tf-hover) !important;
-  --button-background-color-muted-active: var(--tf-accent) !important;
-  --button-background-color-muted-selected: var(--tf-accent) !important;
-  --button-text-color-muted-active: var(--tf-accent-fg) !important;
-  --button-text-color-muted-selected: var(--tf-accent-fg) !important;
+  --button-background-color-muted-active: var(--tf-select) !important;
+  --button-background-color-muted-selected: var(--tf-select) !important;
+  --button-text-color-muted-active: var(--tf-fg) !important;
+  --button-text-color-muted-selected: var(--tf-fg) !important;
   --button-border-color-muted: transparent !important;
   --button-border-color-muted-hover: transparent !important;
   --button-border-color-muted-active: transparent !important;
