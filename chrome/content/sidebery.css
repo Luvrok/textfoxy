@@ -208,15 +208,15 @@
   .Tab[data-pin="true"][data-active="true"] .body {
     background-color: var(--tf-select) !important;
   }
-  /* pinned tabs look unloaded unless they are the active one: firefox gives
-     a restored pinned tab its browser right away, so for sidebery it is never
-     "discarded" even before it loads. hover brings the icon up */
-  .Tab[data-pin="true"]:not([data-active="true"]) :is(.fav, .fav-icon) {
+  /* unloaded pinned tabs are dim like the other unloaded ones, hover brings
+     the icon up. firefox restores pinned tabs with a browser, so they only
+     count as unloaded once discarded (dotfiles: the unload-pinned add-on) */
+  .Tab[data-pin="true"][data-discarded="true"]:not([data-active="true"]) :is(.fav, .fav-icon) {
     opacity: var(--tabs-discarded-favicon-opacity, 0.48) !important;
     filter: grayscale(0.6);
     transition: opacity 0.2s ease, filter 0.2s ease;
   }
-  .Tab[data-pin="true"]:not([data-active="true"]):hover :is(.fav, .fav-icon) {
+  .Tab[data-pin="true"][data-discarded="true"]:not([data-active="true"]):hover :is(.fav, .fav-icon) {
     opacity: 1 !important;
     filter: none;
   }

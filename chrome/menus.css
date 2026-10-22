@@ -181,8 +181,9 @@ panel,
   margin-bottom: 4px !important;
 }
 /* the "⋯" of an extension: one grey square on its icon, not one on the
-   button and another on the icon */
-.unified-extensions-item-menu-button {
+   button (8px padding on the left only, so the dots sat off center) and
+   another on the icon. the id outweighs the .subviewbutton rule above */
+#unified-extensions-panel .unified-extensions-item-menu-button {
   background-color: transparent !important;
 
   &:not([disabled]):is(:hover, [open], :focus-visible) {
