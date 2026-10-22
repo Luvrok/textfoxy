@@ -1,7 +1,6 @@
 :root {
   --tf-sidebar-width: 280px;
   --tf-sidebar-inset: 8px;
-  --tf-navbar-height: 50px;
   --tf-anim: 0.22s cubic-bezier(.4,0,.2,1);
 }
 
@@ -37,8 +36,11 @@
   margin-left: 0 !important;
 }
 
+/* the toolbar folds by its height, whatever the navbar and bookmarks make
+   it (a fixed margin left a strip). the max-height is only a ceiling */
 #navigator-toolbox {
-  transition: margin-top var(--tf-anim), opacity var(--tf-anim) !important;
+  max-height: 160px;
+  transition: max-height var(--tf-anim), opacity var(--tf-anim) !important;
 }
 
 #main-window[titlepreface="᠎"],
@@ -53,6 +55,8 @@
 #main-window[titlepreface="᠎‌"] #navigator-toolbox,
 #main-window[titlepreface="᠎​"] #navigator-toolbox,
 #main-window[titlepreface="‌"] #navigator-toolbox {
-  margin-top: calc(-1 * var(--tf-navbar-height));
+  max-height: 0 !important;
+  min-height: 0 !important;
+  overflow: clip !important;
   opacity: 0;
 }

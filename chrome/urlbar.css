@@ -1,7 +1,7 @@
 /*
  * the address bar is flat text in the navbar's box, the box turns the accent
- * while it has the keys. the results hang under it like a menu: as wide as
- * the bar, an accent frame, the row under the cursor grey
+ * while it has the keys. the results hang under the navbar like a menu, as
+ * wide as the page under them: an accent frame, the row under the cursor grey
  */
 #urlbar {
   text-align: center;
@@ -20,7 +20,15 @@
   padding-block: 0 !important;
 }
 
-/* the results */
+/* the results: a box under the navbar, its top border on the navbar's
+   bottom one, its sides on the sides of the page's box */
+#nav-bar {
+  anchor-name: --tf-navbar;
+}
+#tabbrowser-tabbox {
+  anchor-name: --tf-main;
+}
+
 #urlbar .urlbarView {
   text-align: start;
   color: var(--tf-fg) !important;
@@ -28,13 +36,26 @@
   border: var(--tf-border-width) solid var(--tf-accent) !important;
   border-radius: var(--tf-rounding) !important;
   box-shadow: none !important;
-  padding: 6px 0 0 !important;
+  padding: 0 !important;
 
-  /* firefox anchors it to the bar; down to the navbar's bottom border, so
-     the two boxes share it */
   &:popover-open {
-    margin: calc(var(--urlbar-container-padding-block, 4px) + var(--tf-navbar-padding) - var(--tf-border-width)) 0 0 !important;
+    position-area: none !important;
+    justify-self: auto !important;
+    inset: auto !important;
+    top: calc(anchor(--tf-navbar bottom) - var(--tf-border-width)) !important;
+    left: anchor(--tf-main left) !important;
+    right: anchor(--tf-main right) !important;
+    width: auto !important;
+    margin: 0 !important;
   }
+}
+
+/* no line, padding or negative margins of its own inside the frame */
+#urlbar .urlbarView-results {
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
 }
 
 /* proton draws the view inside the bar */
@@ -47,6 +68,7 @@
 .urlbarView-row {
   border-radius: var(--tf-rounding) !important;
   margin-inline: 0 !important;
+  border-inline: none !important;
 
   /* the "switch to tab" chips: dim text on the right, like a row's info */
   .urlbarView-action,
@@ -77,7 +99,7 @@
 /* the search engines under the results */
 .urlbarView .search-one-offs {
   border-top: var(--tf-border-width) solid var(--tf-border) !important;
-  margin: 6px 0 0 !important;
+  margin: 0 !important;
   padding: 2px 6px !important;
 
   .searchbar-engine-one-off-item {

@@ -150,11 +150,43 @@
 }
 
 /*
- * every radius firefox has, on every element: the tokens get set again on
- * components (panels, the urlbar, moz-button hosts), and !important from a
- * user sheet beats all of those. --tf-rounding brings them back
+ * every radius firefox has: on the root and on the elements that set the
+ * tokens again (panels, the urlbar, the hosts of moz-* components, whose
+ * :host rules a user sheet's !important beats). not on *, that made every
+ * element carry 30 variables and panels open slowly. --tf-rounding brings
+ * them back
  */
-* {
+:root,
+menupopup,
+panel,
+tooltip,
+.urlbar,
+#searchbar,
+.searchmode-switcher,
+#PopupAutoComplete,
+#PopupSearchAutoComplete,
+:is(
+  moz-button,
+  moz-button-group,
+  moz-badge,
+  moz-box-button,
+  moz-box-item,
+  moz-box-link,
+  moz-box-group,
+  moz-card,
+  moz-checkbox,
+  moz-fieldset,
+  moz-input-search,
+  moz-input-text,
+  moz-message-bar,
+  moz-radio,
+  moz-select,
+  moz-toggle,
+  panel-list,
+  panel-item,
+  notification-message,
+  sidebar-panel-header
+) {
   --border-radius-xsmall: var(--tf-rounding) !important;
   --border-radius-small: var(--tf-rounding) !important;
   --border-radius-medium: var(--tf-rounding) !important;

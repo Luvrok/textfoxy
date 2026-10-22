@@ -144,3 +144,39 @@ panel,
 .menupopup-arrowscrollbox {
   border-width: var(--border-width) !important;
 }
+
+/* downloads: narrower, the text with even padding, the footer button flush
+   with the frame like a menu's last row */
+#downloadsPanel-mainView {
+  min-width: 0 !important;
+  width: 26em !important;
+  padding: 0 !important;
+}
+#emptyDownloads {
+  padding: 12px !important;
+}
+#downloadsFooter toolbarseparator {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+#downloadsFooterButtons .downloadsPanelFooterButton,
+#downloadsHistory {
+  margin: 0 !important;
+  padding: 8px 12px !important;
+}
+
+/* extensions: one line for the name and one for the state, so every row is
+   as high as the others and the "⋯" buttons line up */
+.unified-extensions-item-contents,
+.unified-extensions-item-message-deck {
+  min-width: 0 !important;
+}
+.unified-extensions-item-name,
+.unified-extensions-item-message {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+#unified-extensions-manage-extensions {
+  margin-bottom: 4px !important;
+}
