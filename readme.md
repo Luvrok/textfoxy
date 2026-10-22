@@ -211,7 +211,9 @@ All configuration options are optional and can be set as this example shows (rea
         font = {
           family = "Fira Code";
           size = "15px";
-          accent = "#654321";
+          color = "#ebdbb2"; # text
+          accent = "#654321"; # hover tint, the selected row, the active tab, focused boxes
+          selected = "#fbf1c7"; # text on the accent
         };
         tabs = {
           horizontal.enable = true;
@@ -238,10 +240,26 @@ All configuration options are optional and can be set as this example shows (rea
 ```
 </details>
 
+### Look
+
+Every box is square with a 1px frame that turns the accent on hover or
+focus. Menus, panels, the address bar results and the Sidebery context menu
+have an accent frame, and the row under the cursor is filled with the accent.
+Hover is a 25% tint of the accent, secondary text (shortcuts, urls, match
+counts) is the text color at 45%. `font.color`, `font.accent` and
+`font.selected` set these, `background.color` the background of everything.
+
+The theme targets Firefox's new design ("Nova", `browser.nova.enabled`, on by
+default since Firefox 158) and the old one, and works with `sidebar.revamp`
+on or off: the Sidebery panel header with the panel switcher is hidden in
+both. To turn Nova off, set `browser.nova.enabled` to `false` ("Enable the
+Nova redesign" in the settings).
+
 ### Sidebery
 
 Sidebery CSS is provided from `content/sidebery` (applied as content to
-the sidebery url). If you have any pre-existing css set from within the sidebery
+the sidebery sidebar, settings and group pages). It takes textfoxy's colors
+over the ones Sidebery reads from the theme. If you have any pre-existing css set from within the sidebery
 settings, they might clash or make it so that the sidebery style does not match
 the example.
 

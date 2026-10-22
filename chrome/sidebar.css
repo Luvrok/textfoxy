@@ -1,9 +1,10 @@
 #sidebar-box {
   margin: 8px;
-  border: var(--border-width) solid var(--tf-border);
+  border: var(--border-width) solid var(--tf-border) !important;
   border-radius: var(--tf-rounding) !important;
   transition: border-color var(--tf-border-transition);
   background: var(--tf-bg) !important;
+  box-shadow: none !important;
   &:hover {
     border-color: var(--tf-accent) !important;
   }
@@ -25,31 +26,42 @@
 
 #sidebar {
   border-radius: var(--tf-rounding) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
+/* the old sidebar's "Sidebery ⌄ ✕" header */
 #sidebar-header {
-  display: none;
+  display: none !important;
 }
 
 #sidebar-splitter {
-  display: none;
+  display: none !important;
 }
 
-@media (-moz-bool-pref: "sidebar.revamp") {
-  #sidebar {
-    box-shadow: none !important;
-  }
+/* the new sidebar (sidebar.revamp) gives an extension's panel a header of
+   its own, with the panel switcher and a close button. it lives in the
+   document of the panel */
+#webextpanels-window sidebar-panel-header {
+  display: none !important;
+}
+
+@media -moz-pref("sidebar.revamp") {
   #sidebar-main {
-    :root[lwtheme] & {
-      background-color: var(--tf-bg) !important;
-      background-image: unset !important;
+    background-color: var(--tf-bg) !important;
+    background-image: unset !important;
+  }
+  /* the launcher: without its tools and without native vertical tabs it is
+     an empty strip next to the sidebar */
+  @media not -moz-pref("sidebar.verticalTabs") {
+    #sidebar-container,
+    #sidebar-launcher-splitter {
+      display: var(--tf-display-sidebar-tools) !important;
     }
   }
   #sidebar-box {
     font-size: unset !important;
-    padding: 8px !important;
     &::before {
-      margin: -20px 4px;
       margin: -1.75rem 0rem;
       content: "tool";
     }
@@ -68,24 +80,24 @@
       content: "tools";
       color: var(--lwt-text-color);
       background-color: var(--tf-bg);
-      margin: -1rem .75rem 0rem;
+      margin: -1rem 0.75rem 0rem;
       padding: 0 4px;
     }
     &:hover::before {
       color: var(--tf-accent);
     }
   }
-#tabbrowser-tabs[orient="vertical"] {
-  &:not([expanded]) {
-      #vertical-pinned-tabs-container, .tab-stack {
-        width: 100% !important;
-      }
+
+  #tabbrowser-tabs[orient="vertical"]:not([expanded]) {
+    #vertical-pinned-tabs-container,
+    .tab-stack {
+      width: 100% !important;
     }
   }
 }
 
 /*Floorp sidebar fix*/
 #sidebar-select-box {
-    background-color: var(--lwt-accent-color) !important;
-    background-image: var(--lwt-accent-color) !important;
+  background-color: var(--tf-bg) !important;
+  background-image: none !important;
 }

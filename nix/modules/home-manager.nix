@@ -2,7 +2,6 @@ inputs:
 { config, lib, pkgs, ... }:
 let
   inherit (pkgs.stdenv.hostPlatform) system;
-  inherit (builtins) baseNameOf;
   cfg = config.textfoxy;
   textfoxyAssets = inputs.self.packages.${system}.default;
 
@@ -10,9 +9,17 @@ let
     inputs.firefox-addons.packages.${system}.sidebery
   ];
 
+  # the icon sets in icons.css are switched by these prefs
+  iconPrefs = {
+    "shyfox.enable.ext.mono.toolbar.icons" = cfg.config.icons.toolbar.extensions.enable;
+    "shyfox.enable.ext.mono.context.icons" = cfg.config.icons.context.extensions.enable;
+    "shyfox.enable.context.menu.icons" = cfg.config.icons.context.firefox.enable;
+  };
+
   mkProfiles = browserProfiles: lib.mkMerge (map
     (profile: {
       ${profile} = {
+        settings = iconPrefs;
         extraConfig = builtins.readFile "${textfoxyAssets}/user.js";
         extensions.packages = extensionList;
         containersForce = true;
@@ -21,17 +28,24 @@ let
     })
     browserProfiles);
 
+  # the chrome directory with config.css in it. home-manager links every file
+  # into the store, and content processes (sidebery, about: pages) resolve
+  # userContent.css's imports next to the file it links to: config.css has
+  # to be in the same store path, or sidebery gets none of the colors.
+  # userChrome.css comes from the profiles' userChrome option instead
+  chromeDir = pkgs.runCommand "textfoxy-chrome" { } ''
+    cp -r ${textfoxyAssets}/chrome $out
+    chmod -R u+w $out
+    rm $out/userChrome.css
+    cp ${pkgs.writeText "config.css" cfg.configCss} $out/config.css
+  '';
+
   mkChromeFiles = profileBase: profiles: lib.mkMerge (map
     (profile: {
       "${profileBase}/${profile}/chrome" = {
-        source = pkgs.lib.cleanSourceWith {
-          src = "${textfoxyAssets}/chrome";
-          filter = path: type: !(type == "regular" && baseNameOf path == "userChrome.css");
-        };
+        source = chromeDir;
         recursive = true;
       };
-
-      "${profileBase}/${profile}/chrome/config.css".text = cfg.configCss;
     })
     profiles);
 in
@@ -41,12 +55,14 @@ in
   config = lib.mkIf cfg.enable (lib.mkMerge [
     (lib.mkIf cfg.browsers.firefox.enable {
       programs.firefox.profiles = mkProfiles cfg.browsers.firefox.profiles;
-      home.file = mkChromeFiles ".mozilla/firefox" cfg.browsers.firefox.profiles;
+      # home-manager's own path: ~/.mozilla/firefox, or ~/.config/mozilla/firefox
+      # since home.stateVersion 26.05
+      home.file = mkChromeFiles config.programs.firefox.profilesPath cfg.browsers.firefox.profiles;
     })
 
     (lib.mkIf cfg.browsers.librewolf.enable {
       programs.librewolf.profiles = mkProfiles cfg.browsers.librewolf.profiles;
-      home.file = mkChromeFiles ".librewolf" cfg.browsers.librewolf.profiles;
+      home.file = mkChromeFiles config.programs.librewolf.profilesPath cfg.browsers.librewolf.profiles;
     })
   ]);
 }

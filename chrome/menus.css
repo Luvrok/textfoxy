@@ -1,38 +1,199 @@
-:is(
-  menupopup,
-  panel
-):not(.autoscroller) {
+/*
+ * menus and panels, drawn like the quickshell menus: the background, a 1px
+ * accent frame, square, no shadow. the row under the cursor is grey, the
+ * keys and other info are dim
+ */
+:is(menupopup, panel):not(.autoscroller) {
+  --panel-background-color: var(--tf-bg) !important;
   --panel-background: var(--tf-bg) !important;
-  --panel-border-radius: var(--tf-rounding) !important;
+  --panel-text-color: var(--tf-fg) !important;
+  --panel-color: var(--tf-fg) !important;
   --panel-border-color: var(--tf-accent) !important;
+  --panel-border-radius: var(--tf-rounding) !important;
   --panel-separator-color: var(--tf-border) !important;
-}
-slot[part="content"] {
-  border-width: var(--border-width) !important;
-}
+  --panel-box-shadow: none !important;
+  --panel-shadow: none !important;
+  --arrowpanel-background: var(--tf-bg) !important;
+  --arrowpanel-color: var(--tf-fg) !important;
+  --arrowpanel-border-color: var(--tf-accent) !important;
 
-#appMenu-popup {
-  #shadow-root {
-    > * {
-      border-width: 2px !important;
-    }
+  &::part(content) {
+    border-width: var(--tf-border-width) !important;
   }
 }
 
+/* context menus: rows like the menus', 3px and 12px around the text.
+   panels keep firefox's spacing, their rows are laid out for it */
+menupopup {
+  --menuitem-padding-block: 3px !important;
+  --menuitem-padding-inline: 12px !important;
+}
+
+/* the hover and the cursor, the same row in a menu */
 menu,
 menuitem {
-  &:where([_moz-menuactive]:not([disabled="true"])) {
-    background: var(--tab-selected-bgcolor) !important;
+  &[_moz-menuactive]:not([disabled]) {
+    background-color: var(--tf-select) !important;
+    color: var(--tf-fg) !important;
   }
-  &:where([_moz-menuactive="true"][disabled="true"]) {
-    background: var(--tab-hover-background-color) !important;
+  &[_moz-menuactive][disabled] {
+    background-color: transparent !important;
   }
+  &[disabled] {
+    color: var(--tf-dim) !important;
+  }
+}
+
+/* the keys on the right, like the info column of a row */
+.menu-accel,
+.menu-iconic-accel {
+  color: var(--tf-dim) !important;
+}
+
+menuseparator {
+  padding-inline: 12px !important;
+
+  &::before {
+    border-top-color: var(--tf-border) !important;
+  }
+}
+
+menucaption,
+.subview-subheader,
+.panel-header > h1 {
+  color: var(--tf-accent) !important;
+}
+
+/* buttons in panels: the app menu, extensions, downloads */
+.subviewbutton,
+.widget-overflow-list .toolbarbutton-1,
+.panel-subview-footer-button,
+.PanelUI-subView .toolbaritem-combined-buttons > .subviewbutton {
+  border-radius: var(--tf-rounding) !important;
+
+  &:not([disabled]):is(:hover, [open], [_moz-menuactive], :focus-visible) {
+    background-color: var(--tf-select) !important;
+    color: var(--tf-fg) !important;
+    outline: none !important;
+  }
+  &[disabled] {
+    color: var(--tf-dim) !important;
+  }
+}
+
+/* the menu's own zoom and edit buttons: the item hovers, not the row */
+.toolbaritem-combined-buttons:is(:not([cui-areatype="toolbar"]), [overflowedItem="true"]) > .subviewbutton:not([disabled]):is(:hover, :hover:active) {
+  background-color: var(--tf-select) !important;
+  color: var(--tf-fg) !important;
+}
+
+.subviewbutton-shortcut,
+#appMenu-zoom-controls2 > .toolbarbutton-text,
+.panel-header + toolbarseparator + .panel-subview-body .subview-subheader {
+  color: var(--tf-dim) !important;
+}
+
+/* separators in panels */
+panel toolbarseparator,
+.panel-header + toolbarseparator,
+toolbarseparator {
+  color: var(--tf-border) !important;
+  border-color: var(--tf-border) !important;
+}
+
+/* lists made of html (the search mode switcher, the result menu) */
+panel-list {
+  --panel-list-background-color: var(--tf-bg);
+  --panel-list-border-color: var(--tf-accent);
+  --panel-list-text-color: var(--tf-fg);
+  --panel-list-box-shadow: none;
+  border-radius: var(--tf-rounding) !important;
+  border: var(--tf-border-width) solid var(--tf-accent) !important;
+  background-color: var(--tf-bg) !important;
+  color: var(--tf-fg) !important;
+  box-shadow: none !important;
+}
+/* inside a xul panel the panel draws the frame */
+panel > panel-list {
+  border: none !important;
+}
+panel-item {
+  --button-background-color-menu-hover: var(--tf-select);
+  --button-text-color-menu-hover: var(--tf-fg);
+}
+
+/* tooltips: dim frame, no shadow */
+tooltip {
+  appearance: none !important;
+  background-color: var(--tf-bg) !important;
+  color: var(--tf-fg) !important;
+  border: var(--tf-border-width) solid var(--tf-border) !important;
+  border-radius: var(--tf-rounding) !important;
+  box-shadow: none !important;
+  padding: 3px 8px !important;
+}
+
+/* thin scrollbars in long menus, the accent like the menus' bar */
+menupopup,
+panel,
+.urlbarView {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--tf-accent) 70%, transparent) transparent;
 }
 
 .menupopup-arrowscrollbox {
   border-width: var(--border-width) !important;
 }
 
-menuitem {
-  border-radius: var(--tf-rounding) !important;
+/* downloads: narrower, the text with even padding, the footer button flush
+   with the frame like a menu's last row */
+#downloadsPanel-mainView {
+  min-width: 0 !important;
+  width: 26em !important;
+  padding: 0 !important;
+}
+#emptyDownloads {
+  padding: 12px !important;
+}
+#downloadsFooter toolbarseparator {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+#downloadsFooterButtons .downloadsPanelFooterButton,
+#downloadsHistory {
+  margin: 0 !important;
+  padding: 8px 12px !important;
+}
+
+/* extensions: one line for the name and one for the state, so every row is
+   as high as the others and the "⋯" buttons line up */
+.unified-extensions-item-contents,
+.unified-extensions-item-message-deck {
+  min-width: 0 !important;
+}
+.unified-extensions-item-name,
+.unified-extensions-item-message {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+#unified-extensions-manage-extensions {
+  margin-bottom: 4px !important;
+}
+/* the "⋯" of an extension: one grey square on its icon, not one on the
+   button (8px padding on the left only, so the dots sat off center) and
+   another on the icon. the id outweighs the .subviewbutton rule above */
+#unified-extensions-panel .unified-extensions-item-menu-button {
+  background-color: transparent !important;
+
+  &:not([disabled]):is(:hover, [open], :focus-visible) {
+    background-color: transparent !important;
+
+    > .toolbarbutton-icon {
+      background-color: var(--tf-select) !important;
+    }
+  }
+  > .toolbarbutton-icon {
+    border-radius: var(--tf-rounding) !important;
+  }
 }

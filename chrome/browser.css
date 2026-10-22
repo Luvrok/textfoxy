@@ -1,16 +1,33 @@
-.browserContainer, .browser-toolbox-background {
-  background: var(--tf-bg) !important;
+/* the whole window is the background, the theme's frame color doesn't show */
+:root,
+#navigator-toolbox,
+#browser,
+#sidebar-main,
+#sidebar-container,
+.browserContainer,
+.browserStack,
+.browser-toolbox-background {
+  background-color: var(--tf-bg) !important;
+  background-image: none !important;
+}
+
+#navigator-toolbox {
+  border-bottom: none !important;
 }
 
 browser {
-  border-radius: var(--tf-rounding);
+  border-radius: var(--tf-rounding) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 #tabbrowser-tabbox {
   margin: 8px !important;
-  border: var(--border-width) solid var(--tf-border);
-  border-radius: var(--tf-rounding);
+  border: var(--border-width) solid var(--tf-border) !important;
+  border-radius: var(--tf-rounding) !important;
   padding: 8px !important;
+  box-shadow: none !important;
+  outline: none !important;
   transition: border-color var(--tf-border-transition);
   &:hover {
     border-color: var(--tf-accent) !important;
@@ -32,7 +49,7 @@ browser {
 :root[inFullscreen="true"] {
   #tabbrowser-tabbox {
     margin: 0 !important;
-    border: none;
+    border: none !important;
     padding: 0 !important;
     transition: none;
     &::before {
@@ -41,9 +58,37 @@ browser {
   }
 }
 
-#browser:not(.browser-toolbox-background) {
-  :root[lwtheme] & {
-    background-color: var(--lwt-accent-color) !important;
-    background-image: var(--lwt-accent-color) !important;
-  }
+/* notification bars: boxes like the others, the type shows in the icon */
+notification-message,
+moz-message-bar {
+  --message-bar-background-color: var(--tf-bg) !important;
+  --message-bar-background-color-warning: var(--tf-bg) !important;
+  --message-bar-background-color-success: var(--tf-bg) !important;
+  --message-bar-background-color-critical: var(--tf-bg) !important;
+  --message-bar-border-color: var(--tf-border) !important;
+  --message-bar-border-width: var(--border-width) !important;
+  --message-bar-text-color: var(--tf-fg) !important;
+}
+#navigator-toolbox notification-message,
+.notificationbox-stack > notification-message,
+.global-notificationbox > notification-message {
+  margin: 8px 8px 0 !important;
+}
+
+/* dialogs over a page: a menu's frame */
+.dialogBox {
+  background-color: var(--tf-bg) !important;
+  color: var(--tf-fg) !important;
+  border: var(--border-width) solid var(--tf-accent) !important;
+  border-radius: var(--tf-rounding) !important;
+  box-shadow: none !important;
+}
+
+/* the status line at the bottom: links, "Read ..." while loading */
+#statuspanel-label {
+  background-color: var(--tf-bg) !important;
+  color: var(--tf-fg) !important;
+  border: var(--border-width) solid var(--tf-border) !important;
+  border-radius: var(--tf-rounding) !important;
+  box-shadow: none !important;
 }

@@ -27,6 +27,18 @@ clean_path() {
   printf '%s\n' "$fp"
 }
 
+# the first of the paths that exists, else the first one
+first_dir() {
+  local fp
+  for fp in "$@"; do
+    if [[ -d "$fp" ]]; then
+      printf '%s\n' "$fp"
+      return
+    fi
+  done
+  printf '%s\n' "$1"
+}
+
 choose_browser() {
   local choice
 
@@ -38,11 +50,11 @@ choose_browser() {
   case "$choice" in
     1|"")
       BROWSER_NAME="Firefox"
-      PROFILE_ROOT="$HOME/.mozilla/firefox"
+      PROFILE_ROOT="$(first_dir "$HOME/.mozilla/firefox" "${XDG_CONFIG_HOME:-$HOME/.config}/mozilla/firefox")"
       ;;
     2)
       BROWSER_NAME="LibreWolf"
-      PROFILE_ROOT="$HOME/.librewolf"
+      PROFILE_ROOT="$(first_dir "$HOME/.librewolf" "${XDG_CONFIG_HOME:-$HOME/.config}/librewolf/librewolf")"
       ;;
     *)
       echo "[!!] Invalid selection"
@@ -58,9 +70,7 @@ ask_profile_path() {
   echo "Selected browser: ${BROWSER_NAME}"
   echo "Default profile root: ${PROFILE_ROOT}"
 
-  if [[ "$BROWSER_NAME" == "LibreWolf" ]]; then
-    echo "If that path does not exist, check: ~/.config/librewolf/librewolf"
-  fi
+  echo "Profiles are listed in about:profiles"
 
   if [[ "${1:-}" != "" ]]; then
     PROFILE_PATH="$(clean_path "$1")"

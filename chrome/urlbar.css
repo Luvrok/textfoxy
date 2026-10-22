@@ -1,24 +1,174 @@
+/*
+ * the address bar is flat text in the navbar's box, the box turns the accent
+ * while it has the keys. the results hang under the navbar like a menu, as
+ * wide as the page under them: an accent frame, the row under the cursor grey
+ */
 #urlbar {
   text-align: center;
 }
 
-#urlbar-background {
-  background-color: transparent !important;
-  border: unset !important;
-  box-shadow: unset !important;
+/* no field of its own, open or closed: no pill, no joint background, no shadow */
+#urlbar > .urlbar-background,
+.urlbarView-background {
+  display: none !important;
 }
-.urlbarView {
+
+#urlbar .urlbar-input-container {
+  outline: none !important;
+  border: none !important;
+  margin: 0 !important;
+  padding-block: 0 !important;
+}
+
+/* the results: a box under the navbar, its top border on the navbar's
+   bottom one, its sides on the sides of the page's box */
+#nav-bar {
+  anchor-name: --tf-navbar;
+}
+#tabbrowser-tabbox {
+  anchor-name: --tf-main;
+}
+
+#urlbar .urlbarView {
   text-align: start;
-  margin-top: 4px;
-  background-color: var(--tf-bg);
-  border: var(--border-width) solid var(--tf-accent) !important;
-  border-radius: 0 0 var(--tf-rounding) var(--tf-rounding);
+  color: var(--tf-fg) !important;
+  background-color: var(--tf-bg) !important;
+  border: var(--tf-border-width) solid var(--tf-accent) !important;
+  border-radius: var(--tf-rounding) !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+
+  &:popover-open {
+    position-area: none !important;
+    justify-self: auto !important;
+    inset: auto !important;
+    top: calc(anchor(--tf-navbar bottom) - var(--tf-border-width)) !important;
+    left: anchor(--tf-main left) !important;
+    right: anchor(--tf-main right) !important;
+    width: auto !important;
+    margin: 0 !important;
+  }
 }
+
+/* no line, padding or negative margins of its own inside the frame */
+#urlbar .urlbarView-results {
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+}
+
+/* proton draws the view inside the bar */
 .urlbarView-body-inner {
   #urlbar[open] > .urlbarView > .urlbarView-body-outer > & {
     border-top: unset !important;
   }
 }
-.urlbarView:not([noresults]) > .search-one-offs:not([hidden]) {
-  border-top: var(--border-width) solid var(--tf-accent) !important;
+
+.urlbarView-row {
+  border-radius: var(--tf-rounding) !important;
+  margin-inline: 0 !important;
+  border-inline: none !important;
+
+  /* the "switch to tab" chips: dim text on the right, like a row's info */
+  .urlbarView-action,
+  .urlbarView-switchToTab-accessory {
+    border-color: transparent !important;
+    color: var(--tf-dim) !important;
+    background-color: transparent !important;
+  }
+
+  &[selected] {
+    .urlbarView-title {
+      color: var(--tf-fg) !important;
+    }
+  }
+}
+
+.urlbarView-url {
+  color: var(--tf-dim) !important;
+}
+
+/* "Firefox Suggest" and the other group labels: orange, like a menu's title */
+.urlbarView-row[label]::before,
+.urlbarView-group-label {
+  color: var(--tf-accent) !important;
+  opacity: 1 !important;
+}
+
+/* the search engines under the results */
+.urlbarView .search-one-offs {
+  border-top: var(--tf-border-width) solid var(--tf-border) !important;
+  margin: 0 !important;
+  padding: 2px 6px !important;
+
+  .searchbar-engine-one-off-item {
+    border-radius: var(--tf-rounding) !important;
+
+    &:hover {
+      background-color: var(--tf-hover) !important;
+    }
+    &[selected] {
+      background-color: var(--tf-select) !important;
+    }
+  }
+}
+
+/* the boxes in the bar: the search mode switcher, "Not Secure", the page
+   actions. flat, grey on hover */
+#urlbar .searchmode-switcher,
+#identity-box,
+#identity-icon-box,
+#identity-permission-box,
+#trust-icon-container,
+#tracking-protection-icon-container,
+#page-action-buttons > *,
+#userContext-icons {
+  background-color: transparent !important;
+  border-radius: var(--tf-rounding) !important;
+  box-shadow: none !important;
+}
+
+#urlbar .searchmode-switcher:hover,
+#identity-box:hover,
+#identity-icon-box:hover,
+#identity-permission-box:hover,
+#trust-icon-container:hover,
+#tracking-protection-icon-container:hover,
+.urlbar-page-action:hover,
+#userContext-icons:hover {
+  background-color: var(--tf-hover) !important;
+}
+
+/* the search mode switcher is a moz-button, its colors are the muted ones */
+#urlbar .searchmode-switcher,
+#searchbar-new .searchmode-switcher {
+  --button-background-color-muted: transparent !important;
+  --button-background-color-muted-hover: var(--tf-hover) !important;
+  --button-background-color-muted-active: var(--tf-select) !important;
+  --button-background-color-muted-selected: var(--tf-select) !important;
+  --button-text-color-muted-active: var(--tf-fg) !important;
+  --button-text-color-muted-selected: var(--tf-fg) !important;
+  --button-border-color-muted: transparent !important;
+  --button-border-color-muted-hover: transparent !important;
+  --button-border-color-muted-active: transparent !important;
+  --button-border-color-muted-selected: transparent !important;
+}
+
+#trust-label,
+#identity-icon-label {
+  color: var(--tf-dim) !important;
+}
+
+/* the container of the tab: its icon and name in its color, no pill */
+#userContext-icons {
+  --identity-fill-tint: transparent !important;
+  padding-inline: 4px !important;
+
+  #userContext-label {
+    color: var(--identity-icon-color) !important;
+  }
+  #userContext-indicator {
+    fill: var(--identity-icon-color) !important;
+  }
 }
