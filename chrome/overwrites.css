@@ -1,40 +1,99 @@
+/*
+ * userChrome is a user sheet: firefox's own rules win over it unless it says
+ * !important, whatever the specificity. so everything that changes something
+ * firefox sets is !important here
+ */
+
 :root {
   --toolbar-color: currentColor !important;
   --link-color: var(--tf-accent) !important;
-  --urlbarView-highlight-background: var(
-    --toolbar-field-background-color
-  ) !important;
   --toolbox-non-lwt-bgcolor: var(--tf-bg) !important;
-  --toolbar-field-background-color: var(--tf-bg) !important;
+  --toolbar-bgcolor: var(--tf-bg) !important;
+  --toolbar-background-color: var(--tf-bg) !important;
+  --toolbar-text-color: var(--tf-fg) !important;
 
-  /* borders */
-  --border-width: var(--tf-border-width) !important;
-  --border-radius-small: var(--tf-rounding) !important;
-  --border-radius-medium: var(--tf-rounding) !important;
-  --toolbarbutton-border-radius: var(--tf-rounding) !important;
-  --tab-border-radius: var(--tf-rounding) !important;
+  /* fields: flat, the box around them shows the focus */
+  --toolbar-field-background-color: var(--tf-bg) !important;
+  --toolbar-field-background-color-focus: var(--tf-bg) !important;
+  --toolbar-field-text-color: var(--tf-fg) !important;
+  --toolbar-field-text-color-focus: var(--tf-fg) !important;
+  --toolbar-field-border-color: transparent !important;
+  --toolbar-field-border-color-focus: transparent !important;
+  --toolbar-field-focus-border-color: transparent !important;
+  /* the theme's selection in the address bar and the find bar */
+  --lwt-toolbar-field-highlight: var(--tf-accent) !important;
+  --lwt-toolbar-field-highlight-text: var(--tf-accent-fg) !important;
+
+  /* the accent is the cursor: focus rings, checkboxes, primary buttons */
+  --focus-outline-color: var(--tf-accent) !important;
+  --color-accent-primary: var(--tf-accent) !important;
+  --color-accent-primary-hover: color-mix(in srgb, var(--tf-accent) 85%, var(--tf-fg)) !important;
+  --color-accent-primary-active: color-mix(in srgb, var(--tf-accent) 70%, var(--tf-fg)) !important;
+  --color-accent-primary-selected: var(--tf-accent) !important;
+  --button-text-color-primary: var(--tf-accent-fg) !important;
+  --button-text-color-primary-hover: var(--tf-accent-fg) !important;
+  --button-text-color-primary-active: var(--tf-accent-fg) !important;
+
+  /* buttons: orange tint on hover, filled orange when pressed or open */
+  --toolbarbutton-background-color-hover: var(--tf-hover) !important;
+  --toolbarbutton-background-color-active: var(--tf-accent) !important;
+  --toolbarbutton-hover-background: var(--tf-hover) !important;
+  --toolbarbutton-active-background: var(--tf-accent) !important;
+  --toolbarbutton-checked-background: var(--tf-hover) !important;
+  --toolbarbutton-outline-color: transparent !important;
+  --toolbarbutton-outline-color-hover: transparent !important;
+  --toolbarbutton-outline-color-active: transparent !important;
+  --toolbarbutton-outline-color-selected: transparent !important;
+  --button-background-color-ghost-hover: var(--tf-hover) !important;
+  --button-background-color-ghost-active: var(--tf-accent) !important;
+  --button-text-color-ghost-active: var(--tf-accent-fg) !important;
+  --button-background-color-hover: var(--tf-hover) !important;
+  --button-background-color-active: var(--tf-accent) !important;
+  --button-text-color-active: var(--tf-accent-fg) !important;
+
+  /* buttons in panels and dialogs: a dim frame, the accent on hover, like
+     the tiles of the menus. the primary one is filled with the accent */
+  --button-background-color: transparent !important;
+  --button-border-color: var(--tf-border) !important;
+  --button-border-color-hover: var(--tf-accent) !important;
+  --button-border-color-active: var(--tf-accent) !important;
+  --button-text-color: var(--tf-fg) !important;
+  --button-text-color-hover: var(--tf-fg) !important;
+  --button-border-color-primary: var(--tf-accent) !important;
+  --button-border-color-primary-hover: var(--tf-accent) !important;
+  --button-background-color-primary: var(--tf-accent) !important;
+  --button-background-color-primary-hover: var(--color-accent-primary-hover) !important;
+  --button-background-color-primary-active: var(--color-accent-primary-active) !important;
+
+  /* address bar results: the selected row is the orange cursor */
+  --urlbarview-background-color-hover: var(--tf-hover) !important;
+  --urlbarview-background-color-selected: var(--tf-accent) !important;
+  --urlbarview-text-color-selected: var(--tf-accent-fg) !important;
+  --urlbarview-text-color-secondary: var(--tf-dim) !important;
+  --urlbarview-text-color-action: var(--tf-dim) !important;
+  --urlbarview-separator-color: var(--tf-border) !important;
+  --urlbarview-action-button-background-color: transparent !important;
+  --urlbarview-action-button-background-color-hover: var(--tf-hover) !important;
+  --urlbar-box-background-color: transparent !important;
+  --urlbar-box-background-color-focus: transparent !important;
+  --urlbar-box-background-color-hover: var(--tf-hover) !important;
+  --urlbar-box-background-color-active: var(--tf-accent) !important;
+  --urlbar-box-text-color-active: var(--tf-accent-fg) !important;
 
   /* tabs */
   --tab-selected-outline-color: transparent !important;
-  --tab-selected-bgcolor: color-mix(
-    in hsl,
-    var(--toolbar-field-color) 8%,
-    var(--toolbar-bgcolor)
-  ) !important;
-  --tab-hover-background-color: color-mix(
-    in hsl,
-    var(--toolbar-field-color) 4%,
-    var(--toolbar-bgcolor)
-  ) !important;
+  --tab-selected-bgcolor: var(--tf-accent) !important;
+  --tab-selected-textcolor: var(--tf-accent-fg) !important;
+  --tab-hover-background-color: var(--tf-hover) !important;
   --tab-min-height: 29px !important;
 
-  /* buttons */
-  --toolbarbutton-hover-background: var(
-    --tab-hover-background-color
-  ) !important;
-  --button-background-color-active: var(
-    --tab-hover-background-color
-  ) !important;
+  /* sidebar and the content area: no shadows, no outlines */
+  --content-area-shadow: none !important;
+  --sidebar-border-color: var(--tf-border) !important;
+  --chrome-content-separator-color: var(--tf-border) !important;
+
+  /* borders */
+  --border-width: var(--tf-border-width) !important;
 
   /* containers */
   [data-color="yellow"],
@@ -88,4 +147,66 @@
 
   /* opacity */
   --inactive-titlebar-opacity: 1 !important;
+}
+
+/*
+ * every radius firefox has, on every element: the tokens get set again on
+ * components (panels, the urlbar, moz-button hosts), and !important from a
+ * user sheet beats all of those. --tf-rounding brings them back
+ */
+* {
+  --border-radius-xsmall: var(--tf-rounding) !important;
+  --border-radius-small: var(--tf-rounding) !important;
+  --border-radius-medium: var(--tf-rounding) !important;
+  --border-radius-large: var(--tf-rounding) !important;
+  --border-radius-xlarge: var(--tf-rounding) !important;
+  --border-radius-circle: var(--tf-rounding) !important;
+  --button-border-radius: var(--tf-rounding) !important;
+  --toolbarbutton-border-radius: var(--tf-rounding) !important;
+  --tab-border-radius: var(--tf-rounding) !important;
+  --panel-border-radius: var(--tf-rounding) !important;
+  --popup-border-radius: var(--tf-rounding) !important;
+  --menuitem-border-radius: var(--tf-rounding) !important;
+  --panel-menuitem-border-radius: var(--tf-rounding) !important;
+  --panel-item-button-border-radius: var(--tf-rounding) !important;
+  --arrowpanel-border-radius: var(--tf-rounding) !important;
+  --urlbar-border-radius: var(--tf-rounding) !important;
+  --urlbar-inner-border-radius: var(--tf-rounding) !important;
+  --urlbarview-border-radius: var(--tf-rounding) !important;
+  --urlbarView-row-border-radius: var(--tf-rounding) !important;
+  --urlbarView-icon-border-radius: var(--tf-rounding) !important;
+  --urlbar-background-border-radius: var(--tf-rounding) !important;
+  --urlbar-background-border-top-radius-open: var(--tf-rounding) !important;
+  --input-text-border-radius: var(--tf-rounding) !important;
+  --input-search-border-radius: var(--tf-rounding) !important;
+  --select-border-radius: var(--tf-rounding) !important;
+  --card-border-radius: var(--tf-rounding) !important;
+  --badge-border-radius: var(--tf-rounding) !important;
+  --toggle-border-radius: var(--tf-rounding) !important;
+  --sidebar-border-radius: var(--tf-rounding) !important;
+  --tab-panel-border-radius: var(--tf-rounding) !important;
+  --message-bar-border-radius: var(--tf-rounding) !important;
+}
+
+/* text fields in panels and dialogs: no fill, a dim frame, the accent while
+   they have the keys */
+:is(panel, dialog, window:not(#main-window)) :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"]), textarea, menulist) {
+  background-color: transparent !important;
+  color: var(--tf-fg) !important;
+  border: 1px solid var(--tf-border) !important;
+  border-radius: var(--tf-rounding) !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  &:is(:focus, :focus-within, [open]) {
+    border-color: var(--tf-accent) !important;
+  }
+}
+
+/* selected text is on the cursor too, like the text lines of the menus */
+input::selection,
+textarea::selection,
+::selection {
+  background-color: var(--tf-accent) !important;
+  color: var(--tf-accent-fg) !important;
 }

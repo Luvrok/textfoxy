@@ -1,21 +1,19 @@
-@import url("../overwrites.css");
-/*== ShyFox Sidebery ===============================================================================================================================
-
-Styles for Sidebery extension
-
-
---- VARIABLES ---------------------------------------------------------------------------------------------------------------------------------------
-
-*/
-
-@-moz-document regexp("^moz-extension://.*?/sidebar/sidebar.html")
+/*
+ * sidebery, drawn like the quickshell bar and menus: the panels are the
+ * bar's tags, the active tab is the menu's orange cursor, pinned tabs are
+ * the tiles of the tools menu, the context menu is a menu with an accent
+ * frame. textfoxy's colors win over the ones sidebery takes from the theme
+ */
+@-moz-document regexp("^moz-extension://.*?/(sidebar/sidebar|page\\.setup/setup|page\\.group/group)\\.html.*")
 {
   /* wrap start */
 
   #root.root {
     --general-border-radius: var(--tf-rounding) !important;
     --general-margin: 8px !important;
+    --general-font-family: var(--tf-font-family) !important;
     --tabs-font: var(--tf-font-size) var(--tf-font-family) !important;
+    --ctx-menu-font: var(--tf-font-size) var(--tf-font-family) !important;
 
     --button-size: 35px;
     --pin-favicon-size: 30px;
@@ -24,6 +22,10 @@ Styles for Sidebery extension
     --nav-btn-width: var(--button-size) !important;
     --nav-btn-height: var(--button-size) !important;
     --nav-btn-len-margin: calc(var(--tf-rounding) / 4) !important;
+    --nav-btn-border-radius: var(--tf-rounding) !important;
+    --nav-hidden-btn-border-radius: var(--tf-rounding) !important;
+    --nav-btn-active-shadow: none !important;
+    --nav-btn-accent: var(--tf-accent) !important;
 
     --audio-btn-round-margin: calc(var(--tf-rounding) / 2) !important;
 
@@ -33,18 +35,110 @@ Styles for Sidebery extension
     --tabs-inner-gap: calc(var(--tf-margin) / 2) !important;
     --tabs-border-radius: var(--tf-rounding) !important;
 
-    --frame-el-overlay-selected-border: var(--s-toolbar-fg) !important;
-    --frame-el-overlay-hover-bg: color-mix(
-      in hsl,
-      currentColor 4%,
-      var(--toolbar-bg)
-    ) !important;
-    --toolbar-el-overlay-selected-border: var(--s-toolbar-fg) !important;
-    --status-notice: var(--s-toolbar-fg) !important;
+    /* colors */
+    --frame-bg: var(--tf-bg) !important;
+    --frame-fg: var(--tf-fg) !important;
+    --frame-el-bg: transparent !important;
+    --frame-el-fg: var(--tf-fg) !important;
+    --frame-el-shadow: none !important;
+    --toolbar-bg: var(--tf-bg) !important;
+    --toolbar-fg: var(--tf-fg) !important;
+    --popup-bg: var(--tf-bg) !important;
+    --popup-fg: var(--tf-fg) !important;
+    --popup-shadow: 0 0 0 var(--tf-border-width) var(--tf-accent) !important;
+    --accent: var(--tf-accent) !important;
+    --toolbar-fg-active: var(--tf-accent) !important;
+    --btn-fg: var(--tf-fg) !important;
+    --border-color: var(--tf-border) !important;
+    --status-active: var(--tf-accent) !important;
+    --status-notice: var(--tf-accent) !important;
+    --border: var(--tf-border) !important;
+
+    /* hover is the accent tint, the cursor is the accent */
+    --frame-el-overlay-hover-bg: var(--tf-hover) !important;
+    --frame-el-overlay-clicked-bg: color-mix(in srgb, var(--tf-accent) 40%, transparent) !important;
+    --frame-el-overlay-selected-bg: var(--tf-hover) !important;
+    --frame-el-overlay-selected-border: var(--tf-accent) !important;
+    --toolbar-el-overlay-hover-bg: var(--tf-hover) !important;
+    --toolbar-el-overlay-clicked-bg: color-mix(in srgb, var(--tf-accent) 40%, transparent) !important;
+    --toolbar-el-overlay-active-bg: var(--tf-accent) !important;
+    --toolbar-el-overlay-active-border: transparent !important;
+    --toolbar-el-overlay-selected-bg: var(--tf-hover) !important;
+    --toolbar-el-overlay-selected-border: var(--tf-accent) !important;
+    --active-el-bg: var(--tf-accent) !important;
+    --active-el-fg: var(--tf-accent-fg) !important;
+    --active-el-shadow: none !important;
+    --active-el-overlay-hover-bg: transparent !important;
+
+    --tabs-normal-bg: transparent !important;
+    --tabs-normal-fg: var(--tf-fg) !important;
+    --tabs-activated-bg: var(--tf-accent) !important;
+    --tabs-activated-fg: var(--tf-accent-fg) !important;
+    --tabs-activated-shadow: none !important;
+    --tabs-progress-bg: var(--tf-hover) !important;
+    --tabs-lvl-opacity: 1 !important;
+
+    --ctx-menu-bg: var(--tf-bg) !important;
+    --ctx-menu-fg: var(--tf-fg) !important;
+    --ctx-menu-shadow: 0 0 0 var(--tf-border-width) var(--tf-accent) !important;
+    --ctx-menu-separator: var(--tf-border) !important;
+    --ctx-menu-border-radius: var(--tf-rounding) !important;
+    --ctx-menu-opt-border-radius: var(--tf-rounding) !important;
+    /* rows run edge to edge, 12px of padding, like the menus' rows */
+    --ctx-menu-padding: 0px !important;
+    --ctx-menu-max-width: 260px !important;
+
+    --scroll-progress-bg: var(--tf-accent) !important;
+    --scroll-color: color-mix(in srgb, var(--tf-accent) 70%, transparent) !important;
+    --frame-scrollbar-color: color-mix(in srgb, var(--tf-accent) 70%, transparent) !important;
+    --toolbar-scrollbar-color: color-mix(in srgb, var(--tf-accent) 70%, transparent) !important;
+    --popup-scrollbar-color: color-mix(in srgb, var(--tf-accent) 70%, transparent) !important;
+
+    background-color: var(--tf-bg) !important;
+    color: var(--tf-fg) !important;
+  }
+
+  /* one font everywhere, buttons and fields too */
+  #root.root,
+  #root.root * {
+    font-family: var(--tf-font-family) !important;
   }
 
   /*
-   * ─[ pinned tabs ]──────────────────────────────────────────────────────
+   * ─[ navigation: the panels are the bar's tags ]────────────────────────
+  */
+
+  #nav_bar,
+  .NavigationBar {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  #nav_bar {
+    padding-top: var(--nav-btn-margin) !important;
+    padding-bottom: var(--general-margin) !important;
+  }
+
+  .NavigationBar .nav-item {
+    &[data-active="true"] {
+      background-color: var(--tf-accent) !important;
+      box-shadow: none !important;
+
+      .icon {
+        fill: var(--tf-accent-fg) !important;
+      }
+      .len,
+      .name-box {
+        color: var(--tf-accent-fg) !important;
+      }
+    }
+    &[data-sel="true"] {
+      box-shadow: inset 0 0 0 1px var(--tf-accent) !important;
+    }
+  }
+
+  /*
+   * ─[ pinned tabs: the tiles of the tools menu ]─────────────────────────
   */
 
   /* size calculation */
@@ -101,9 +195,18 @@ Styles for Sidebery extension
     height: var(--pin-favicon-size) !important;
   }
 
-  /* shadow, outline and background */
+  /* a frame, the accent on hover, filled when active */
   .Tab[data-pin="true"] .body {
-    background-color: var(--toolbar-bg) !important;
+    background-color: transparent !important;
+    box-shadow: inset 0 0 0 1px var(--tf-border) !important;
+    transition: box-shadow var(--tf-border-transition), background-color var(--tf-border-transition) !important;
+  }
+  .Tab[data-pin="true"]:hover .body {
+    box-shadow: inset 0 0 0 1px var(--tf-accent) !important;
+  }
+  .Tab[data-pin="true"][data-active="true"] .body {
+    background-color: var(--tf-accent) !important;
+    box-shadow: inset 0 0 0 1px var(--tf-accent) !important;
   }
 
   /* remove bottom margin */
@@ -112,58 +215,200 @@ Styles for Sidebery extension
   }
 
   /*
-   * ─[ general tab stuff ]────────────────────────────────────────────────
+   * ─[ tabs: rows of a menu, the active one is the cursor ]───────────────
   */
-  .Tab[data-active="true"] .body {
-    box-shadow: none !important;
-    background-color: color-mix(
-      in hsl,
-      currentColor 8%,
-      var(--toolbar-bg)
-    ) !important;
-
-    & .title {
-      color: var(--s-popup-fg) !important;
-    }
-  }
 
   .Tab .body {
     text-transform: var(--tf-text-transform);
-    & .title {
-      color: color-mix(in hsl, var(--s-popup-fg) 50%, transparent) !important;
+    box-shadow: none !important;
+  }
+
+  .Tab[data-active="true"] .body {
+    background-color: var(--tf-accent) !important;
+
+    .title,
+    .t-box,
+    .ctx,
+    .close svg,
+    .audio svg {
+      color: var(--tf-accent-fg) !important;
+      fill: var(--tf-accent-fg) !important;
+    }
+  }
+
+  /* the selected ones: the accent tint and a hairline, like the bar's hover */
+  .Tab[data-selected="true"] .body::before {
+    background-color: var(--tf-hover) !important;
+    box-shadow: inset 0 0 0 1px var(--tf-accent) !important;
+  }
+
+  /* unloaded tabs are dim, like a row's info */
+  .Tab[data-discarded="true"]:not([data-active="true"]) .body :is(.t-box, .title) {
+    color: var(--tf-dim) !important;
+    opacity: 1 !important;
+  }
+
+  /* tree lines */
+  .Tab .body::after {
+    background-color: var(--tf-border) !important;
+  }
+
+  /* the folded count, the close button */
+  .Tab .body .close:hover {
+    background-color: var(--tf-hover) !important;
+  }
+
+  /*
+   * ─[ context menu: a quickshell menu ]──────────────────────────────────
+  */
+
+  .CtxMenu .box {
+    border-radius: var(--tf-rounding) !important;
+    box-shadow: var(--ctx-menu-shadow) !important;
+  }
+
+  .CtxMenu .opt {
+    padding-inline: 12px !important;
+
+    &:not([data-inactive="true"]):is(:hover, [data-selected="true"]) {
+      &::before {
+        background-color: var(--tf-accent) !important;
+        opacity: 1 !important;
+      }
+      .label,
+      .icon,
+      .badge,
+      .flag-icon {
+        color: var(--tf-accent-fg) !important;
+        fill: var(--tf-accent-fg) !important;
+      }
+    }
+    &[data-inactive="true"] {
+      opacity: 1 !important;
+      color: var(--tf-dim) !important;
+
+      .label {
+        color: var(--tf-dim) !important;
+      }
+    }
+    .label.-header {
+      color: var(--tf-accent) !important;
+    }
+  }
+
+  .CtxMenu .icon-opt:not([data-inactive="true"]):hover::before {
+    background-color: var(--tf-accent) !important;
+    opacity: 1 !important;
+  }
+
+  /* the history and closed tabs panels: an accent line on top, the title
+     orange like a menu's head */
+  .SubPanel .sub-panel {
+    box-shadow: none !important;
+    border-top: var(--tf-border-width) solid var(--tf-accent) !important;
+  }
+  .SubPanel .header {
+    background-color: transparent !important;
+  }
+  .SubPanel .header > .title {
+    color: var(--tf-accent) !important;
+  }
+  .SubListTitle .body {
+    color: var(--tf-accent) !important;
+  }
+
+  /* buttons: a frame, the accent and its tint on hover, like the tiles */
+  .btn {
+    box-shadow: inset 0 0 0 1px var(--tf-border) !important;
+
+    &::before {
+      background-color: transparent !important;
+    }
+    &:hover {
+      box-shadow: inset 0 0 0 1px var(--tf-accent) !important;
+
+      &::before {
+        background-color: var(--tf-hover) !important;
+        opacity: 1 !important;
+      }
+    }
+  }
+
+  /* fields of the settings and the dialogs: the chosen option is filled with
+     the accent, "off" is only framed, text fields get the search line */
+  :is(.SelectInput, .select-input-drop-down) .opt,
+  .ToggleInput .opt {
+    &::before,
+    &::after {
+      border-radius: var(--tf-rounding) !important;
+    }
+  }
+  .SelectInput .opt[data-active="true"]:not([data-none="true"]),
+  .ToggleInput[data-active="true"] .opt.-true {
+    color: var(--tf-accent-fg) !important;
+    fill: var(--tf-accent-fg) !important;
+    opacity: 1 !important;
+
+    > svg {
+      fill: var(--tf-accent-fg) !important;
+    }
+    &::before {
+      background-color: var(--tf-accent) !important;
+      opacity: 1 !important;
+    }
+    &::after {
+      opacity: 0 !important;
+    }
+  }
+  .ToggleInput[data-active="false"] .opt.-false {
+    color: var(--tf-fg) !important;
+
+    &::before,
+    &::after {
+      opacity: 0 !important;
+    }
+    box-shadow: inset 0 0 0 1px var(--tf-border) !important;
+  }
+  .TextInput {
+    &::before {
+      background-color: transparent !important;
+    }
+    &::after {
+      border-radius: var(--tf-rounding) !important;
+      box-shadow: inset 0 -1px 0 0 var(--tf-border) !important;
+      opacity: 1 !important;
+    }
+    &[data-active="true"]::after {
+      box-shadow: inset 0 -1px 0 0 var(--tf-accent) !important;
     }
   }
 
   /*
-   * ─[ other ]────────────────────────────────────────────────────────────
+   * ─[ popups, the search bar, the bottom bar ]───────────────────────────
   */
 
-  /* consistent navbar background */
-  #nav_bar {
-    background-color: transparent !important;
-  }
-
-  /* padding */
-  #nav_bar {
-    padding-top: var(--nav-btn-margin) !important;
-    padding-bottom: var(--general-margin) !important;
-  }
-
-  .BottomBar {
-    padding: var(--nav-btn-margin) !important;
-  }
-
-  /* popup */
   .popup {
     margin: var(--tabs-margin) !important;
   }
   .popup-container {
     background-color: transparent !important;
   }
+  .popup,
+  .popup .box,
+  .popup-container > .popup {
+    border-radius: var(--tf-rounding) !important;
+  }
 
-  /* search */
+  /* the search line: a hairline under the text that turns the accent */
   #search_bar {
     margin: 4px !important;
+    border-radius: var(--tf-rounding) !important;
+    background-color: transparent !important;
+    box-shadow: inset 0 -1px 0 0 var(--tf-border) !important;
+
+    &:focus-within {
+      box-shadow: inset 0 -1px 0 0 var(--tf-accent) !important;
+    }
   }
   #search_bar[data-showed="false"] {
     display: none !important;
@@ -172,25 +417,60 @@ Styles for Sidebery extension
     margin-inline-end: var(--general-margin);
   }
 
-  .NavigationBar {
+  .BottomBar {
+    padding: var(--nav-btn-margin) !important;
+    background-color: transparent !important;
     box-shadow: none !important;
   }
 
-  /* accent colored selection */
-  ::selection {
-    background: color-mix(
-      in hsl,
-      var(--s-toolbar-fg) 20%,
-      transparent
-    ) !important;
+  .NavigationBar,
+  .BottomBar {
+    box-shadow: none !important;
   }
 
-  /* notification */
+  /* new tab buttons and the bottom bar's buttons */
+  .NewTabBar .new-tab-btn,
+  .BottomBar .btn {
+    border-radius: var(--tf-rounding) !important;
+  }
+
+  .ScrollBox > :is(.top-shadow, .bottom-shadow) {
+    box-shadow: 0 0 0 1px var(--tf-border) !important;
+  }
+
   .notification {
     border-radius: var(--tf-rounding) !important;
     &::after {
       top: calc(var(--tf-rounding) / 4 + 3px) !important;
       right: calc(var(--tf-rounding) / 4 + 3px) !important;
     }
+  }
+
+  /* containers: the same colors as in the browser */
+  [data-color="yellow"],
+  [data-color="orange"] {
+    --color: #f6c177 !important;
+  }
+  [data-color="purple"] {
+    --color: #c4a7e7 !important;
+  }
+  [data-color="blue"],
+  [data-color="turquoise"],
+  [data-color="cyan"] {
+    --color: #9ccfd8 !important;
+  }
+  [data-color="green"] {
+    --color: #3e8fb0 !important;
+  }
+  [data-color="red"] {
+    --color: #eb6f92 !important;
+  }
+  [data-color="pink"] {
+    --color: #ea9a97 !important;
+  }
+
+  ::selection {
+    background-color: var(--tf-accent) !important;
+    color: var(--tf-accent-fg) !important;
   }
 } /* wrap end */

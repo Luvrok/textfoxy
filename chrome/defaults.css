@@ -1,9 +1,11 @@
 :root {
   --tf-font-family: "SF Mono", Consolas, monospace; /* Font family of config */
   --tf-font-size: 14px; /* Font size of config */
-  --tf-accent: var(--toolbarbutton-icon-fill); /* Accent color used, eg: color when hovering a container  */
+  --tf-fg: var(--lwt-text-color, currentColor); /* Text color */
+  --tf-accent: var(--toolbarbutton-icon-fill); /* Accent color used, eg: color when hovering a container, the selected row */
+  --tf-accent-fg: var(--tf-bg); /* Text on the accent: the selected row, the active tab */
   --tf-bg: var(--lwt-accent-color, -moz-dialog); /* Background color of all elements, tab colors derive from this */
-  --tf-border: var(--arrowpanel-border-color, --toolbar-field-background-color); /* Border color when not hovered */
+  --tf-border: var(--arrowpanel-border-color, var(--toolbar-field-background-color)); /* Border color when not hovered */
   --tf-border-transition: 0.2s ease; /* Smooth color transitions for borders */
   --tf-border-width: 2px; /* Width of borders */
   --tf-rounding: 0px; /* Border radius used through out the config */
@@ -19,4 +21,8 @@
   --tf-navbar-margin: 8px 8px 2px; /* navbar margin */
   --tf-navbar-padding: 4px; /* navbar padding */
   --tf-bookmarks-alignment: center; /* alignment of bookmarks in the bookmarks toolbar (if you have many bookmarks, left is recommended) */
+
+  /* derived, not meant to be set: secondary text and the hover of rows and buttons */
+  --tf-dim: color-mix(in srgb, var(--tf-fg) 45%, transparent);
+  --tf-hover: color-mix(in srgb, var(--tf-accent) 25%, transparent);
 }

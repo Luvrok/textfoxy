@@ -62,7 +62,8 @@
   border-radius: var(--tf-rounding);
   transition: border-color var(--tf-border-transition) !important;
   &:hover,
-  &:focus {
+  &:focus,
+  &:focus-within {
     border-color: var(--tf-accent) !important;
   }
   &::before {
@@ -73,7 +74,7 @@
     margin: -16px 8px;
     padding: 0 2px;
   }
-  &:hover::before {
+  &:is(:hover, :focus-within)::before {
     color: var(--tf-accent);
   }
 
@@ -128,7 +129,7 @@ toolbarbutton.bookmark-item:not(.subviewbutton) {
   }
 }
 
-@media (-moz-bool-pref: "sidebar.revamp") {
+@media -moz-pref("sidebar.revamp") {
   #nav-bar::before {
     margin: -1.35rem 0.75rem;
     left: 0;
@@ -138,4 +139,29 @@ toolbarbutton.bookmark-item:not(.subviewbutton) {
   .titlebar-spacer[type="post-tabs"] {
     width: 0 !important;
   }
+}
+
+/*
+ * toolbar buttons, like the tags of the bar: an accent tint on hover, filled
+ * with the accent while pressed or while their menu is open
+ */
+:is(.toolbarbutton-1, #PanelUI-menu-button):not([disabled]) {
+  &:is([open], :hover:active) {
+    > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack, .toolbarbutton-text) {
+      background-color: var(--tf-accent) !important;
+      color: var(--tf-accent-fg) !important;
+      fill: var(--tf-accent-fg) !important;
+    }
+  }
+}
+
+.toolbarbutton-1 > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack, .toolbarbutton-text) {
+  border-radius: var(--tf-rounding) !important;
+  outline: none !important;
+}
+
+/* square badges */
+.toolbarbutton-badge {
+  border-radius: var(--tf-rounding) !important;
+  box-shadow: none !important;
 }

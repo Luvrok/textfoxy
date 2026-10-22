@@ -1,38 +1,164 @@
-:is(
-  menupopup,
-  panel
-):not(.autoscroller) {
+/*
+ * menus and panels, drawn like the quickshell menus: the background, a 1px
+ * accent frame, square, no shadow. the row under the cursor is filled with
+ * the accent, the keys and other info are dim
+ */
+:is(menupopup, panel):not(.autoscroller) {
+  --panel-background-color: var(--tf-bg) !important;
   --panel-background: var(--tf-bg) !important;
-  --panel-border-radius: var(--tf-rounding) !important;
+  --panel-text-color: var(--tf-fg) !important;
+  --panel-color: var(--tf-fg) !important;
   --panel-border-color: var(--tf-accent) !important;
+  --panel-border-radius: var(--tf-rounding) !important;
   --panel-separator-color: var(--tf-border) !important;
-}
-slot[part="content"] {
-  border-width: var(--border-width) !important;
-}
+  --panel-box-shadow: none !important;
+  --panel-shadow: none !important;
+  --arrowpanel-background: var(--tf-bg) !important;
+  --arrowpanel-color: var(--tf-fg) !important;
+  --arrowpanel-border-color: var(--tf-accent) !important;
 
-#appMenu-popup {
-  #shadow-root {
-    > * {
-      border-width: 2px !important;
-    }
+  /* like the rows of the menus: 3px and 12px around the text */
+  --menuitem-padding-block: 3px !important;
+  --menuitem-padding-inline: 12px !important;
+  --panel-menuitem-padding: 3px 12px !important;
+  --panel-menuitem-margin: 0 !important;
+  --panel-menuitem-margin-inline: 0 !important;
+  --panel-separator-padding-inline: 12px !important;
+
+  &::part(content) {
+    border-width: var(--tf-border-width) !important;
   }
 }
 
+/* the hover and the cursor, the same row in a menu */
 menu,
 menuitem {
-  &:where([_moz-menuactive]:not([disabled="true"])) {
-    background: var(--tab-selected-bgcolor) !important;
+  &[_moz-menuactive]:not([disabled]) {
+    background-color: var(--tf-accent) !important;
+    color: var(--tf-accent-fg) !important;
+    --menuitem-icon-fill: var(--tf-accent-fg) !important;
+    fill: var(--tf-accent-fg) !important;
+
+    .menu-accel,
+    .menu-iconic-accel {
+      color: var(--tf-accent-fg) !important;
+    }
   }
-  &:where([_moz-menuactive="true"][disabled="true"]) {
-    background: var(--tab-hover-background-color) !important;
+  &[_moz-menuactive][disabled] {
+    background-color: transparent !important;
   }
+  &[disabled] {
+    color: var(--tf-dim) !important;
+  }
+}
+
+/* the keys on the right, like the info column of a row */
+.menu-accel,
+.menu-iconic-accel {
+  color: var(--tf-dim) !important;
+}
+
+menuseparator {
+  padding-inline: 12px !important;
+
+  &::before {
+    border-top-color: var(--tf-border) !important;
+  }
+}
+
+menucaption,
+.subview-subheader,
+.panel-header > h1 {
+  color: var(--tf-accent) !important;
+}
+
+/* buttons in panels: the app menu, extensions, downloads */
+.subviewbutton,
+.widget-overflow-list .toolbarbutton-1,
+.panel-subview-footer-button,
+.PanelUI-subView .toolbaritem-combined-buttons > .subviewbutton {
+  border-radius: var(--tf-rounding) !important;
+
+  &:not([disabled]):is(:hover, [open], [_moz-menuactive], :focus-visible) {
+    background-color: var(--tf-accent) !important;
+    color: var(--tf-accent-fg) !important;
+    fill: var(--tf-accent-fg) !important;
+    outline: none !important;
+
+    > .toolbarbutton-icon {
+      fill: var(--tf-accent-fg) !important;
+    }
+    .subviewbutton-shortcut,
+    .toolbarbutton-text,
+    .toolbarbutton-multiline-text {
+      color: var(--tf-accent-fg) !important;
+    }
+  }
+  &[disabled] {
+    color: var(--tf-dim) !important;
+  }
+}
+
+/* the menu's own zoom and edit buttons: the item hovers, not the row */
+.toolbaritem-combined-buttons:is(:not([cui-areatype="toolbar"]), [overflowedItem="true"]) > .subviewbutton:not([disabled]):is(:hover, :hover:active) {
+  background-color: var(--tf-accent) !important;
+  color: var(--tf-accent-fg) !important;
+}
+
+.subviewbutton-shortcut,
+#appMenu-zoom-controls2 > .toolbarbutton-text,
+.panel-header + toolbarseparator + .panel-subview-body .subview-subheader {
+  color: var(--tf-dim) !important;
+}
+
+/* separators in panels */
+panel toolbarseparator,
+.panel-header + toolbarseparator,
+toolbarseparator {
+  color: var(--tf-border) !important;
+  border-color: var(--tf-border) !important;
+}
+
+/* lists made of html (the search mode switcher, the result menu) */
+panel-list {
+  --panel-list-background-color: var(--tf-bg);
+  --panel-list-border-color: var(--tf-accent);
+  --panel-list-text-color: var(--tf-fg);
+  --panel-list-box-shadow: none;
+  border-radius: var(--tf-rounding) !important;
+  border: var(--tf-border-width) solid var(--tf-accent) !important;
+  background-color: var(--tf-bg) !important;
+  color: var(--tf-fg) !important;
+  box-shadow: none !important;
+}
+/* inside a xul panel the panel draws the frame */
+panel > panel-list {
+  border: none !important;
+}
+panel-item {
+  --button-background-color-menu-hover: var(--tf-accent);
+  --button-text-color-menu-hover: var(--tf-accent-fg);
+}
+
+/* tooltips: dim frame, no shadow */
+tooltip {
+  appearance: none !important;
+  background-color: var(--tf-bg) !important;
+  color: var(--tf-fg) !important;
+  border: var(--tf-border-width) solid var(--tf-border) !important;
+  border-radius: var(--tf-rounding) !important;
+  box-shadow: none !important;
+  padding: 3px 8px !important;
+}
+
+/* thin scrollbars in long menus, the accent like the menus' bar */
+menupopup,
+panel,
+.urlbarView {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--tf-accent) 70%, transparent) transparent;
 }
 
 .menupopup-arrowscrollbox {
   border-width: var(--border-width) !important;
-}
-
-menuitem {
-  border-radius: var(--tf-rounding) !important;
 }

@@ -22,8 +22,12 @@
 }
 
 #main-window:not([customizing]) #browser #tabbrowser-tabbox {
-  margin-left: calc(var(--tf-sidebar-width) + var(--tf-sidebar-inset) * 2) !important;
   transition: margin-left var(--tf-anim) !important;
+}
+
+/* room for the sidebar only while it's open */
+#main-window:not([customizing]) #browser:where(:has(> #sidebar-box:not([hidden]))) #tabbrowser-tabbox {
+  margin-left: calc(var(--tf-sidebar-width) + var(--tf-sidebar-inset) * 2) !important;
 }
 
 #main-window[inDOMFullscreen="true"] #sidebar-box:not([hidden]) {

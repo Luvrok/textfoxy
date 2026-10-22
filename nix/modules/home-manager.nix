@@ -10,9 +10,17 @@ let
     inputs.firefox-addons.packages.${system}.sidebery
   ];
 
+  # the icon sets in icons.css are switched by these prefs
+  iconPrefs = {
+    "shyfox.enable.ext.mono.toolbar.icons" = cfg.config.icons.toolbar.extensions.enable;
+    "shyfox.enable.ext.mono.context.icons" = cfg.config.icons.context.extensions.enable;
+    "shyfox.enable.context.menu.icons" = cfg.config.icons.context.firefox.enable;
+  };
+
   mkProfiles = browserProfiles: lib.mkMerge (map
     (profile: {
       ${profile} = {
+        settings = iconPrefs;
         extraConfig = builtins.readFile "${textfoxyAssets}/user.js";
         extensions.packages = extensionList;
         containersForce = true;
@@ -41,12 +49,14 @@ in
   config = lib.mkIf cfg.enable (lib.mkMerge [
     (lib.mkIf cfg.browsers.firefox.enable {
       programs.firefox.profiles = mkProfiles cfg.browsers.firefox.profiles;
-      home.file = mkChromeFiles ".mozilla/firefox" cfg.browsers.firefox.profiles;
+      # home-manager's own path: ~/.mozilla/firefox, or ~/.config/mozilla/firefox
+      # since home.stateVersion 26.05
+      home.file = mkChromeFiles config.programs.firefox.profilesPath cfg.browsers.firefox.profiles;
     })
 
     (lib.mkIf cfg.browsers.librewolf.enable {
       programs.librewolf.profiles = mkProfiles cfg.browsers.librewolf.profiles;
-      home.file = mkChromeFiles ".librewolf" cfg.browsers.librewolf.profiles;
+      home.file = mkChromeFiles config.programs.librewolf.profilesPath cfg.browsers.librewolf.profiles;
     })
   ]);
 }

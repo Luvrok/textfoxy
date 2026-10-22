@@ -97,12 +97,22 @@ in
           default = "var(--toolbarbutton-icon-fill)";
           description = "The accent color to use";
         };
+        color = mkOption {
+          type = str;
+          default = "var(--lwt-text-color, currentColor)";
+          description = "Text color";
+        };
+        selected = mkOption {
+          type = str;
+          default = "var(--tf-bg)";
+          description = "Text color on the accent: the selected row, the active tab";
+        };
       };
 
       border = {
         color = mkOption {
           type = str;
-          default = "var(--arrowpanel-border-color, --toolbar-field-background-color)";
+          default = "var(--arrowpanel-border-color, var(--toolbar-field-background-color))";
           description = "Border color when not hovered";
         };
         transition = mkOption {
@@ -183,7 +193,9 @@ in
         :root {
           --tf-font-family: ${cfg.font.family};
           --tf-font-size: ${cfg.font.size};
+          --tf-fg: ${cfg.font.color};
           --tf-accent: ${cfg.font.accent};
+          --tf-accent-fg: ${cfg.font.selected};
           --tf-bg: ${cfg.background.color};
           --tf-border: ${cfg.border.color};
           --tf-border-transition: ${cfg.border.transition};
